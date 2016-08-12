@@ -1,0 +1,116 @@
+.clear {
+	clear: both;
+}
+
+.docmain {
+	width: 100%;
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+.docmodel {
+	width: 768px;
+}
+
+.docmain .line {
+	width: 95%;
+	margin: 0 auto;
+	height: 45px;
+	line-height: 45px;
+}
+
+.docmain .line .block {
+	float: left;
+	width: 50%;
+	height: 100%;
+}
+
+.docmain .line .first {
+	float: left;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.docmain .line .second {
+	font-size: 16px;
+	float: left;
+}
+
+.docmain .line .fjtable {
+	float: left;
+	width: 80%;
+	margin-top: 15px;
+}
+
+.docmain .line .fjtable .tableline {
+	border: 0px solid #ffffff;
+}
+
+.docmain .line .fjtable .tableline td {
+	border: 0px solid #ffffff;
+	line-height: 25px;
+}
+
+.docmain .title {
+	line-height: 45px;
+	width: 95%;
+	height: auto;
+	margin: 0 auto;
+	font-size: 16px;
+}
+
+.docmain .title_b {
+	line-height: 30px;
+	width: 95%;
+	margin: 0 auto;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+
+.chaochu {
+	width: 200px;
+	max-width: 400px;
+	display: block;
+	overflow: hidden;
+	word-break: keep-all;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display: block;
+}
+
+.change {
+	width: 100%;
+	height: auto;
+}
+
+.change tbody  tr td {
+	height: 30px;
+	line-height: 30px;
+}
+
+.change  .tdmiddle {
+	text-align: center;
+}
+
+.managerinfoblock {
+	float: left;
+	width: 50%;
+}
+
+.managerinfoblock .managerinfoblockright {
+	margin-left: 5%;
+	margin-top: 6%;
+	width: 95%;
+}
+
+.csshiden {
+	width: 60px;
+	display: block;
+	overflow: hidden;
+	word-break: keep-all;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: #000;
+	
+}

@@ -1,0 +1,296 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" isELIgnored="false"%>
+<%@include file="../common/java.jsp"%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<%@include file="../common/css.jsp"%>
+
+<!-- The styles -->
+<style type="text/css">
+</style>
+
+</head>
+
+<body>
+	<%@include file="../common/header.jsp"%>
+
+	<%@include file="../common/nav2.jsp"%>
+	<div class="col-lg-10 index-iframe" >
+	<div class="docInput-top">
+		<ol class="breadcrumb">
+			<li><a href="<c:url value='/home/index' />"><i class="icon-home"></i> 首页</a></li>
+		  <li class="active"> 系统管理-管理员管理</li>
+		</ol>
+	</div>
+	<!-- 页面顶部结束 -->
+	<!-- 表格开始 -->
+	<div class="container-fluid">
+	<input type="button" class="btn btn-default" value="添加管理员" onclick="addAdmin();"></input>
+	<br/>
+	<br/>
+	</div>
+<div class="container-fluid"  style="height: 450px;overflow-y:scroll; ">
+    <table id="table"
+           class="table table-bordered table-hover"
+           >
+        <tr>
+            <th>序号</th>
+            <th>所属单位</th>
+            <th>所属部门</th>
+            <th>所属科室</th>
+            <th>姓名</th>
+            <th>联系电话一</th>
+            <th>联系电话二</th>
+            <th>联系电话三</th>
+			<th>操作</th>
+        </tr>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+</div>
+		<!-- 表格结束 -->
+<%@include file="../common/footer.jsp"%>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <input id="modalOpen" style="display:none" type="button" data-toggle="modal" data-target="#myModal">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 id="modalTitle" class="modal-title" id="myModalLabel">
+               添加
+            </h4>
+         </div>
+         <form id="modalForm" method="post" action="<c:url value='/sys/updateAdmin' />" class="form-horizontal">
+         <div class="modal-body">
+            <input type="hidden" id="uid" name="id">
+            <input type="hidden" id="editType" name="editType">
+              <div class="form-group">
+                <label for="remark" class="col-sm-3 control-label">所属单位：</label>
+                <div class="col-sm-9">
+                  <select class="form-control" id="remark" name="remark">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="name" class="col-sm-3 control-label">姓名：</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="name" name="name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="phone" class="col-sm-3 control-label">联系电话一：</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="phone" name="phone">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="phone2" class="col-sm-3 control-label">联系电话二：</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="phone2" name="phone2">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="phone3" class="col-sm-3 control-label">联系电话三：</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="phone3" name="phone3">
+                </div>
+              </div>
+         </div>
+         <div class="modal-footer">
+            <button id="modalclose" type="button" class="btn btn-default"  
+               data-dismiss="modal">关闭
+            </button>
+            <button id="submit" type="submit" class="btn btn-primary">
+               提交
+            </button>
+         </div>
+          </form>
+      </div>
+	</div>
+	</div>
+	<%@include file="../common/js.jsp"%>
+<script type="text/javascript">
+$(document).ready(function(){
+	setOrganization();
+	$("#adminIndex").css({"background":"#c91306","color":"#ffffff"});
+	$("#modalForm").validate({
+		errorPlacement : function(error, element) {
+			error.replaceAll($("#" + $(element).attr("name") + "-error"));
+		},
+		rules : {
+			name : {
+				required : true,
+			},
+			phone : {
+				required : true,
+			}
+		},
+		messages : {
+			name : {
+				required : true,
+			},
+			phone : {
+				required : true,
+			}
+		},
+		submitHandler : function() {
+			$("#modalclose").click();
+			ajaxSubmit($("#modalForm"),function(){
+				successAlert("操作成功");
+				getData();
+			});
+		}
+	});
+	getData();
+	
+});
+
+function setOrganization(){
+	$.ajax({
+		url : "<c:url value='/sys/getOrganization' />",
+		type : 'post',
+		dataType : 'json',
+		success : function(result) {
+			if(result.data==null)
+				return;
+			html="";
+			$.each(result.data,function() {
+				if(this.isdef!=0){
+					html+="<option value='"+this.id+"'><div>"+this.name+"</div></option>";
+				}
+				if(this.organizationList!=null){
+					$.each(this.organizationList,function() {
+						html+="<option value='"+this.id+"'>&nbsp;&nbsp;&nbsp;&nbsp;"+this.name+"</option>";
+						if(this.organizationList!=null){
+							$.each(this.organizationList,function() {
+								html+="<option value='"+this.id+"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+this.name+"</option>";
+							});
+						}
+					});
+				}
+			});
+			$("#remark").html(html);
+		}
+	});
+}
+function getData(){
+	$.ajax({
+		url : "<c:url value='/sys/getAdmin' />",
+		type : 'post',
+		dataType : 'json',
+		success : function(result) {
+			if(result.data==null)
+				return;
+			var html="";
+			var i=1;
+			$.each(result.data,function() {
+				var orgname="";
+				if(this.orgname!=null){
+					 orgname=(this.orgname).split(",");
+				}
+				
+				html+="<tr>";
+				html+="<td>"+i+++"</td>";
+				if(orgname[2]!=null){
+					html+="<td>"+orgname[0]+"</td>";
+					html+="<td>"+orgname[1]+"</td>";
+					html+="<td>"+orgname[2]+"</td>";
+				}else if(orgname[1]!=null){
+					html+="<td>"+orgname[0]+"</td>";
+					html+="<td>"+orgname[1]+"</td>";
+					html+="<td></td>";
+				}else if(orgname[0]!=null){
+					html+="<td>"+orgname[0]+"</td>";
+					html+="<td></td>";
+					html+="<td></td>";
+				}else {
+					html+="<td></td>";
+					html+="<td></td>";
+					html+="<td></td>";
+					
+				}
+				html+="<td class='name'>"+this.name+"</td>";
+				if(this.phone!=null){
+					html+="<td class='phone'>"+this.phone+"</td>";
+				}else{
+					html+="<td class='phone'></td>";
+				}
+				if(this.phone2!=null){
+					html+="<td class='phone2'>"+this.phone2+"</td>";
+				}else{
+					html+="<td class='phone2'></td>";
+				}
+				if(this.phone3!=null){
+					html+="<td class='phone3'>"+this.phone3+"</td>";
+				}else{
+					html+="<td class='phone3'></td>";
+				}
+				if(this.id==1){
+					html+='<td></td>';
+				}else{
+					html+='<td><input type="button" class="btn btn-default" value="编辑" onclick="editAdmin(\''+this.id+'\',\''+this.oId1+'\',this);" ></input>\n<input type="button" class="btn btn-default" onclick="delAdmin(\''+this.id+'\');" value="删除" ></input></td>';
+				}
+				html+="</tr>";
+			});
+			$("#tbody").html(html);
+			$('#table').bootstrapTable('refresh');
+		}
+	});
+}
+function addAdmin(id,level){
+	clean();
+	$("#modalTitle").html("添加");
+	$("#editType").val("add");
+//	$("#level").val(level);
+	$("#modalOpen").click();
+}
+function editAdmin(id,oid,obj){
+	clean();
+	$("#modalTitle").html("编辑");
+	$("#editType").val("edit");
+	$("#uid").val(id);
+	$("#remark").val(oid);
+	$("#name").val($(obj).parent().parent().children(".name").html());
+	$("#phone").val($(obj).parent().parent().children(".phone").html());
+	$("#phone2").val($(obj).parent().parent().children(".phone2").html());
+	$("#phone3").val($(obj).parent().parent().children(".phone3").html());
+	$("#modalOpen").click();
+	
+}
+
+function delAdmin(id){
+	Ewin.confirm({ message: "确认要删除选择的数据吗？" }).on(function (e) {
+	       if (!e) {
+	         return;
+	       }
+	       $.ajax({
+				url : "<c:url value='/sys/delAdmin' />",
+				type : 'post',
+				dataType : 'json',
+				data : {
+					"id" : id
+					},
+				success : function(result) {
+					successAlert("删除成功");
+					getData();
+				}
+				});
+	 });
+	
+}
+function clean(){
+	$("#modalForm input").each(function(index){
+		$(this).val("");
+	});
+	$("#remark").val("");
+}
+</script>
+</body>
+</html>
