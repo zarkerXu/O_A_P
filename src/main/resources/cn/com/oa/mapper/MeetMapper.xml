@@ -35,6 +35,9 @@
 		delete from meet where id in
 		(${value})
 	</delete>
+	<delete id="deleteupdate" parameterType="String">
+	    update meet set isuse=1 where id in (${value})
+	</delete>
 	<update id="update" parameterType="Meet">
 		update meet
 		<set>
@@ -788,8 +791,8 @@
 	<insert id="insert" parameterType="Meet">
 		insert into
 		meet(id,name,meetTime,meetCompany,department,level,docNo,docTitle,docSummary,contactName,contactPhone,addr,signNum,signStatus,passStatus,isuse,remark,cuid,createTime)
-		values(#{id},#{name},DATE_FORMAT(#{meetTimeString},'%Y-%m-%d
-		%H:%i:%S'),#{meetCompany},#{department,jdbcType=VARCHAR},#{level},#{docNo,jdbcType=VARCHAR},#{docTitle,jdbcType=VARCHAR},#{docSummary,jdbcType=VARCHAR},#{contactName,jdbcType=VARCHAR},#{contactPhone,jdbcType=VARCHAR},#{addr,jdbcType=VARCHAR},#{signNum},1,2,0,#{remark,jdbcType=VARCHAR},#{cuid},#{createTime})
+		values(#{id},#{name},#{meetTime},
+		#{meetCompany},#{department,jdbcType=VARCHAR},#{level},#{docNo,jdbcType=VARCHAR},#{docTitle,jdbcType=VARCHAR},#{docSummary,jdbcType=VARCHAR},#{contactName,jdbcType=VARCHAR},#{contactPhone,jdbcType=VARCHAR},#{addr,jdbcType=VARCHAR},#{signNum},1,2,0,#{remark,jdbcType=VARCHAR},#{cuid},#{createTime})
 	</insert>
 
 	<insert id="copyInsert" parameterType="Meet">

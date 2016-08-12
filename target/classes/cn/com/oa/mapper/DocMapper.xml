@@ -31,6 +31,9 @@
     <delete id="delete" parameterType="String">
        delete from doc where id in (${value})
     </delete> 
+    <update id="deleteupdate" parameterType="String">
+    	update doc set isuse=1 where id in (${value})
+    </update>
     <update id="update" parameterType="Doc">
     update doc
     <set>

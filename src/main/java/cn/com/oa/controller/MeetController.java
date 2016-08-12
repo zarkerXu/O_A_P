@@ -79,15 +79,17 @@ public class MeetController extends BaseController {
 		mav.setViewName("meet/meetAuditIndex");
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/meetCompanyIndex", method = RequestMethod.GET)
 	public ModelAndView meetCompanyIndex() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("meet/meetCompanyIndex");
 		return mav;
 	}
+
 	/**
 	 * 会议承办
+	 * 
 	 * @param meet
 	 * @param page
 	 * @return
@@ -105,6 +107,7 @@ public class MeetController extends BaseController {
 
 	/**
 	 * 获取单个会议信息
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -117,6 +120,7 @@ public class MeetController extends BaseController {
 
 	/**
 	 * 会议发送
+	 * 
 	 * @param meet
 	 * @param files
 	 * @param request
@@ -160,20 +164,23 @@ public class MeetController extends BaseController {
 			task.setSignStatus(1);
 			taskService.insert(task);
 		}
-		List<String> list=userService.findUsernamebyOrganizations(meet.getDepartment());
-		if(list.size()!=0){
-			Map<String, Object> map=new HashMap<String, Object>();
+		List<String> list = userService.findUsernamebyOrganizations(meet
+				.getDepartment());
+		if (list.size() != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("action", "meetSend");
 			map.put("id", id);
-			WebUtil.sendText(list.toArray(new String[list.size()]),JSON.toJSONString(map));
-		}else{
-			return returnMap(1,"","无常用联系人");
+			WebUtil.sendText(list.toArray(new String[list.size()]),
+					JSON.toJSONString(map));
+		} else {
+			return returnMap(1, "", "无常用联系人");
 		}
 		return returnMap(0, null, "发送成功");
 	}
 
 	/**
 	 * 会议接收
+	 * 
 	 * @param meet
 	 * @param page
 	 * @param request
@@ -192,6 +199,7 @@ public class MeetController extends BaseController {
 
 	/**
 	 * 会议签收
+	 * 
 	 * @param tid
 	 * @return
 	 */
@@ -219,13 +227,15 @@ public class MeetController extends BaseController {
 			return returnMap(1, "已签收", null);
 		}
 	}
-/**
- * 会议审计
- * @param meet
- * @param page
- * @param request
- * @return
- */
+
+	/**
+	 * 会议审计
+	 * 
+	 * @param meet
+	 * @param page
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/meetSelect", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> meetSelect(Meet meet, Page page,
@@ -273,12 +283,13 @@ public class MeetController extends BaseController {
 		}
 		id = id.substring(0, id.length() - 1);
 		meetService.delete(id);
-		taskService.deleteByPid(id);
+		taskService.deletemt(id);
 		return meetSelect(meet, page, request);
 	}
 
 	/**
 	 * 已发布会议
+	 * 
 	 * @param doc
 	 * @param page
 	 * @param request
@@ -295,19 +306,21 @@ public class MeetController extends BaseController {
 		page = meetService.findByUserToPage(doc, page);
 		return returnMap(0, "", page);
 	}
+
 	/**
 	 * 会议转发
+	 * 
 	 * @param id
 	 * @param personnel
 	 * @return
 	 */
-	@RequestMapping(value="/meetRelay",method=RequestMethod.POST)
+	@RequestMapping(value = "/meetRelay", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> meetRelay(String id,String personnel){
+	public Map<String, Object> meetRelay(String id, String personnel) {
 		Subject currentRoot = SecurityUtils.getSubject();
-		String did=UuidUtil.get32UUID();
+		String did = UuidUtil.get32UUID();
 		String[] oidList = personnel.split(",");
-		Meet meet=new Meet();
+		Meet meet = new Meet();
 		meet.setPersonnel(personnel);
 		meet.setCuid(String.valueOf(currentRoot.getPrincipal()));
 		meet.setSignNum(oidList.length);
@@ -323,25 +336,29 @@ public class MeetController extends BaseController {
 			task.setSignStatus(1);
 			taskService.insert(task);
 		}
-		return returnMap(0,"","已转发");
+		return returnMap(0, "", "已转发");
 	}
+
 	/**
 	 * 会议转发审批
+	 * 
 	 * @param id
 	 * @param value
 	 * @return
 	 */
-	@RequestMapping(value="/meetRelayPass",method=RequestMethod.POST)
+	@RequestMapping(value = "/meetRelayPass", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> docRelayPass(String id,String remark){
-		Meet meet=new Meet();
+	public Map<String, Object> docRelayPass(String id, String remark) {
+		Meet meet = new Meet();
 		meet.setId(id);
 		meet.setRemark(remark);
 		meetService.update(meet);
-		return returnMap(0,"","已审批");
+		return returnMap(0, "", "已审批");
 	}
+
 	/**
 	 * 会议承办通过人员报名
+	 * 
 	 * @param id
 	 * @param pass
 	 * @param passRemark
@@ -349,43 +366,38 @@ public class MeetController extends BaseController {
 	 */
 	@RequestMapping(value = "/meetUserPass", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> meetUserPass(String id,Boolean pass,String passRemark){
-		MEntry mEntry=new MEntry();
+	public Map<String, Object> meetUserPass(String id, Boolean pass,
+			String passRemark) {
+		MEntry mEntry = new MEntry();
 		mEntry.setId(id);
-		if(pass){
+		if (pass) {
 			mEntry.setPassStatus(0);
 			mEntryService.update(mEntry);
-		}else{
+		} else {
 			mEntry.setPassStatus(1);
 			mEntry.setPassRemark(passRemark);
-			MEntry mEntry2=mEntryService.find(id);
-			Task task=new Task();
-			Task task2=new Task();
-			task2=taskService.find(mEntry2.getPid());
+			MEntry mEntry2 = mEntryService.find(id);
+			Task task = new Task();
+			Task task2 = new Task();
+			task2 = taskService.find(mEntry2.getPid());
 			task.setId(mEntry2.getPid());
 			task.setPassStatus(1);
 			taskService.update(task);
 			mEntryService.update(mEntry);
 			try {
-				
 				User user = new User();
-				user=userService.find(task2.getUid());
-//				user.setOid(oid);
-//				user.setIsmain(0);
-//				List<User> userList = userService.findByParameter(user);
-//				List<String> list = new ArrayList<String>();
-//				for (User user1 : userList) {
-//					list.add(user1.getAccount());
-//				}
-				if (user != null) {
+				user = userService.find(task2.getUid());
+				List<String> list = new ArrayList<String>();
+				list.add(user.getAccount());
+				if (list.size() != 0) {
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("action", "meetUserPass");
 					map.put("id", id);
-					WebUtil.sendTexts(user.getAccount(),
+					WebUtil.sendText(list.toArray(new String[list.size()]),
 							JSON.toJSONString(map));
-					return returnMap(0, "已催收", null);
+					return returnMap(0, "", "已催收");
 				} else {
-					return returnMap(1, "无常用联系人", null);
+					return returnMap(1, "", "无常用联系人");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -393,30 +405,34 @@ public class MeetController extends BaseController {
 		}
 		return returnMap(0, null, null);
 	}
+
 	/**
 	 * 报名关闭
+	 * 
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/meetPass", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> meetPass(String id){
-		Meet meet=new Meet();
+	public Map<String, Object> meetPass(String id) {
+		Meet meet = new Meet();
 		meet.setId(id);
 		meet.setPassStatus(0);
 		meetService.update(meet);
 		taskService.updatePassStatusByPid(id, 0);
 		return returnMap(0, null, null);
 	}
+
 	/**
 	 * 报名重开
+	 * 
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/meetUnpass", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> meetUnPass(String id){
-		Meet meet=new Meet();
+	public Map<String, Object> meetUnPass(String id) {
+		Meet meet = new Meet();
 		meet.setId(id);
 		meet.setPassStatus(2);
 		meetService.update(meet);
@@ -438,6 +454,7 @@ public class MeetController extends BaseController {
 
 	/**
 	 * 获取接收单位会议的报名表
+	 * 
 	 * @param pid
 	 * @return
 	 */
@@ -448,8 +465,10 @@ public class MeetController extends BaseController {
 		mEntry.setPid(pid);
 		return returnMap(0, null, mEntryService.findByParameter(mEntry));
 	}
+
 	/**
 	 * 获取根据id单个报名人员信息
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -460,7 +479,8 @@ public class MeetController extends BaseController {
 	}
 
 	/**
-	 * 删除报名人员 
+	 * 删除报名人员
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -478,53 +498,58 @@ public class MeetController extends BaseController {
 
 	/**
 	 * 修改报名人员
+	 * 
 	 * @param mEntry
 	 * @param editType
 	 * @return
 	 */
 	@RequestMapping(value = "/updateMEntry", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> updateMEntry(MEntry mEntry,String editType) {
+	public Map<String, Object> updateMEntry(MEntry mEntry, String editType) {
 		try {
-			if(editType.equals("add")){
+			if (editType.equals("add")) {
 				mEntryService.insert(mEntry);
-				return returnMap(0, null,null);
-			}else if(editType.equals("edit")){
+				return returnMap(0, null, null);
+			} else if (editType.equals("edit")) {
 				mEntry.setPassStatus(3);
 				mEntryService.update(mEntry);
-				return returnMap(0, null,null);
+				return returnMap(0, null, null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return returnMap(1, null, null);
 	}
+
 	/**
 	 * 承办单位获取会议报名表
+	 * 
 	 * @param mid
 	 * @return
 	 */
 	@RequestMapping(value = "/getMEntryByPassStatus", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> getMEntryByPassStatus(String mid) {
-		MEntry mEntry=new MEntry();
+		MEntry mEntry = new MEntry();
 		mEntry.setId(mid);
 		return returnMap(0, null, mEntryService.findByMeetid(mEntry));
 	}
+
 	/**
 	 * 接收单位报名表提交审批
+	 * 
 	 * @param id
 	 * @param status
 	 * @return
 	 */
 	@RequestMapping(value = "/updateTaskPassStatus", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> updateTaskPassStatus(String id,Integer status) {
+	public Map<String, Object> updateTaskPassStatus(String id, Integer status) {
 		try {
-			if(taskService.find(id).getPassStatus()==0){
+			if (taskService.find(id).getPassStatus() == 0) {
 				return returnMap(1, null, null);
 			}
-			Task task=new Task();
+			Task task = new Task();
 			task.setId(id);
 			task.setPassStatus(status);
 			taskService.update(task);
@@ -534,36 +559,37 @@ public class MeetController extends BaseController {
 		}
 		return returnMap(1, null, null);
 	}
-	
-	
+
 	@RequestMapping(value = "/passExcel")
 	public ModelAndView passExcel(String mid) {
-		ModelAndView view=new ModelAndView();
-		Meet meet=meetService.find(mid);
-		MEntry mEntry=new MEntry();
+		ModelAndView view = new ModelAndView();
+		Meet meet = meetService.find(mid);
+		MEntry mEntry = new MEntry();
 		mEntry.setId(mid);
 		mEntry.setOrderBy("type,passStatus");
-		List<MEntry> MElist=mEntryService.findByMeetid(mEntry);
-		List<List<List<String>>> list=new ArrayList<List<List<String>>>();
-		List<List<String>> list1=new ArrayList<List<String>>();
-		List<List<String>> list2=new ArrayList<List<String>>();
-		List<List<String>> list3=new ArrayList<List<String>>();
-		Integer i=1;
-		for(MEntry entry:MElist){
-			List<String> stringlist=new ArrayList<String>();
+		List<MEntry> MElist = mEntryService.findByMeetid(mEntry);
+		List<List<List<String>>> list = new ArrayList<List<List<String>>>();
+		List<List<String>> list1 = new ArrayList<List<String>>();
+		List<List<String>> list2 = new ArrayList<List<String>>();
+		List<List<String>> list3 = new ArrayList<List<String>>();
+		Integer i = 1;
+		for (MEntry entry : MElist) {
+			List<String> stringlist = new ArrayList<String>();
 			stringlist.add(String.valueOf(i));
 			stringlist.add(entry.getOrganame());
 			stringlist.add(entry.getName());
-			stringlist.add((entry.getSex()==0?"男":"女"));
+			stringlist.add((entry.getSex() == 0 ? "男" : "女"));
 			stringlist.add(entry.getPost());
 			stringlist.add(entry.getPhone());
 			stringlist.add(entry.getRemark());
-			stringlist.add((entry.getPassStatus()==0?"已审批":entry.getPassStatus()==1?"审批未通过":entry.getPassStatus()==3?"未审批":""));
-			if(entry.getType()==0){
+			stringlist.add((entry.getPassStatus() == 0 ? "已审批" : entry
+					.getPassStatus() == 1 ? "审批未通过"
+					: entry.getPassStatus() == 3 ? "未审批" : ""));
+			if (entry.getType() == 0) {
 				list1.add(stringlist);
-			}else if(entry.getType()==1){
+			} else if (entry.getType() == 1) {
 				list2.add(stringlist);
-			}else if(entry.getType()==2){
+			} else if (entry.getType() == 2) {
 				list3.add(stringlist);
 			}
 			i++;
@@ -571,37 +597,39 @@ public class MeetController extends BaseController {
 		list.add(list1);
 		list.add(list2);
 		list.add(list3);
-		view.setView(new ExcelPassView("会议报名表",meet.getName(),list));
+		view.setView(new ExcelPassView("会议报名表", meet.getName(), list));
 		return view;
 	}
+
 	/**
 	 * 会议催收
+	 * 
 	 * @param oid
 	 * @param did
 	 * @return
 	 */
-	@RequestMapping(value="/meetUrge",method=RequestMethod.POST)
+	@RequestMapping(value = "/meetUrge", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> meetUrge(String oid,String mid){
-		User user=new User();
+	public Map<String, Object> meetUrge(String oid, String mid) {
+		User user = new User();
 		user.setOid(oid);
 		user.setIsmain(0);
-		List<User>userList=userService.findByParameter(user);
-		List<String> list=new ArrayList<String>();
-		for(User user1:userList){
+		List<User> userList = userService.findByParameter(user);
+		List<String> list = new ArrayList<String>();
+		for (User user1 : userList) {
 			list.add(user1.getAccount());
 		}
-		if(list.size()!=0){
-			Map<String, Object> map=new HashMap<String, Object>();
+		if (list.size() != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("action", "meetUrge");
 			map.put("id", mid);
-			WebUtil.sendText(list.toArray(new String[list.size()]),JSON.toJSONString(map));
-			return returnMap(0,"","已催收");
-		}else{
-			return returnMap(1,"","无常用联系人");
+			WebUtil.sendText(list.toArray(new String[list.size()]),
+					JSON.toJSONString(map));
+			return returnMap(0, "", "已催收");
+		} else {
+			return returnMap(1, "", "无常用联系人");
 		}
-		
-		
+
 	}
-	
+
 }

@@ -103,7 +103,7 @@
     select *,(select GROUP_CONCAT(name) from sys_organization where FIND_IN_SET(id,queryOrganizationParentInfo(u.oid))>0 order by level) as orgname, (queryOrganizationParentInfo(u.oid)) as orgid from sys_user u where isuse=0 and FIND_IN_SET(u.oid,queryOrganizationChildrenInfo((select remark from sys_user where id=#{id}))) order by createtime
     </select>
     <select id="findAllUsers" resultType="User">
-    select *,(select GROUP_CONCAT(name) from sys_organization where FIND_IN_SET(id,queryOrganizationParentInfo(u.oid))>0 order by level) as orgname, (queryOrganizationParentInfo(u.oid)) as orgid from sys_user u where isuse=0  order by createtime
+    select *,(select GROUP_CONCAT(name) from sys_organization where FIND_IN_SET(id,queryOrganizationParentInfo(u.oid))>0 order by level) as orgname, (queryOrganizationParentInfo(u.oid)) as orgid from sys_user u where isuse=0  order by (queryOrganizationParentInfo(u.oid)),createtime
     </select>
     <select id="findOrganizationAllUser" parameterType="String" resultType="User">
     select * from sys_user where isuse=0 and FIND_IN_SET(oid,queryOrganizationChildrenInfo(#{id})) 

@@ -294,8 +294,7 @@
 				if(num.length==0){
 					alert("请选择接收单位");
 				}else{
-					ajaxSubmit($("#docform"), function a(result){
-						alert(result.data);
+					ajaxSubmit($("#docform"), function a(){
 						Ewin.confirm({ message: "发送成功，是否继续发送" }).on(function (e) {
 						       if (!e) {
 						    	   window.location.href=" <c:url value='/doc/docIndex' />";

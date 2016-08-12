@@ -45,6 +45,8 @@ public interface TaskService {
 	public Integer getDocRelayNum(String did);
 
 	public Integer getMeetRelayNum(String did);
+
+	public void deletemt(String id);
 	
 
 }

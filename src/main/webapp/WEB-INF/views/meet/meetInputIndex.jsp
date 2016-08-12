@@ -443,7 +443,7 @@
                     lang:'zh' //设置控件语言};
                 };
                 $('#meetTimeString').mobiscroll(opt);
-                setOrganization();
+               setOrganization();
                 $("#meetform").validate({
         			errorPlacement : function(error, element) {
         				error.replaceAll($("#" + $(element).attr("name") + "-error"));
@@ -476,17 +476,12 @@
         					required : true
         				}
         			},
-        			/* success : function(label) {
-        				label.text("${validate_message_ok}").addClass("valid");
-        				label.removeClass("error");
-        				label.html("有效");
-        				return false;
-        			}, */
         			submitHandler : function() {
         				var num=$('#jsdwText').children('.marginR10');
-        				if($("#meetTimeString").val()==''){
-        					$("#meetTimeString").click();
-        				}else if(num.length==0){
+        				//if($("#meetTimeString").val()==''){
+        				//	$("#meetTimeString").click();
+        				//}else 
+        					if(num.length==0){
         					alert("请选择接收单位");
         				}else{
         					ajaxSubmit($("#meetform"),function a(){

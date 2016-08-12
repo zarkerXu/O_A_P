@@ -1,5 +1,7 @@
 package cn.com.oa.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +41,17 @@ public class MeetServiceImpl implements MeetService {
 	public String insert(Meet meet) {
 		String id = UuidUtil.get32UUID();
 		meet.setId(id);
+		System.out.println("111   "+meet.getMeetTimeString());
+		if(meet.getMeetTimeString()!=null){
+			SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm");  
+			try {
+				Date date = format.parse(meet.getMeetTimeString());
+				meet.setMeetTime(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
 		meet.setCreateTime(new Date());
 		meetDao.insert(meet);
 		return id;

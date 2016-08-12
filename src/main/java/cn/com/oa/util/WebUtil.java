@@ -91,34 +91,6 @@ public class WebUtil {
 		}
 		return false;
 	}
-	
-	public static boolean sendTexts(String users, String msg) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> msgMap = new HashMap<String, Object>();
-		map.put("target_type", "users");
-		map.put("target", users);
-		msgMap.put("type", "cmd");
-		msgMap.put("action", msg);
-		map.put("msg", msgMap);
-		StringEntity entity = null;
-		String json = null;
-		try {
-			entity = new StringEntity(JSON.toJSONString(map));
-			json = HttpUtil.post(Const.HX_URL + "messages", entity, true);
-			Map<String, Object> map2 = JSON.parseObject(json, Map.class);
-			if (map2.get("entities") == null) {
-				throw new Exception();
-			}
-			return true;
-		} catch (Exception e) {
-			if (json != null && json.equals("401")) {
-				if (getToken()) {
-					sendTexts(users, msg);
-				}
-			}
-		}
-		return false;
-	}
 
 	public static void main(String[] args) {
 		Map<String, Object> map = new HashMap<String, Object>();

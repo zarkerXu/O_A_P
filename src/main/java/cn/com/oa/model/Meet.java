@@ -415,9 +415,8 @@ public class Meet {
 	public void setRelayRemark(String relayRemark) {
 		this.relayRemark = relayRemark;
 	}
+
 	
-
-
 
 
 }

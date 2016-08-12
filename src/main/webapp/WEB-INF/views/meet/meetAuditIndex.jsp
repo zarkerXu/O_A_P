@@ -42,6 +42,7 @@
 				    <label for="docCompany7" class="col-xs-6 control-label">等    &nbsp; &nbsp; &nbsp; &nbsp;级：</label>
 				    <div class="col-xs-6">
 				    	<select class="form-control" id="level1" name="level">
+				    	 		<option value="">全部</option>
 			  				    <option value="1">特急</option>
 								<option value="2">加急</option>
 								<option value="3">平急</option>
@@ -107,11 +108,12 @@
 			
 				<tr>
 					<th><input type="checkbox" onClick="allSelect()">序号</th>
-					<th>会议时间</th>
+					<th>发布时间</th>
 					<th>会议名称</th>
 					<th>发文编号</th>
 					<th>发文标题</th>
 					<th>承办单位</th>
+					<th>会议时间</th>
 					<th>内容</th>
 					<th>已签收/应签收</th>
 					<th>等级</th>
@@ -326,29 +328,21 @@ function setTable(data){
 		i=(page-1)*size+1;
 	}
 	 $.each(data.pageObject,function() {
-		 var date=new Date(this.meetTime);
-		 var month=date.getMonth()+1;
-		 var minutes=""+date.getMinutes();
-		 var seconds=""+date.getSeconds();
-		 if(minutes.length==1){
-			 minutes="0"+minutes;
-		 }
-		 if(seconds.length==1){
-			 seconds="0"+seconds;
-		 }
-		 var datetime=date.getFullYear()+"-"+month+"-"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;  
+		 var datetime=times(this.createTime);
+		 var meettime=times(this.meetTime);  
 		 html+="<tr><td><input type='checkbox'  value='"+this.id+"'>&nbsp;"
 		 +i+"</td><td>"+datetime+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td><p class='chaochu'>"
-		 +this.meetCompanyName+"</p></td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
+		 +this.meetCompanyName+"</p></td><td>"+meettime+"</td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
 		 +"','"+this.tid
 		 +"','"+this.signStatus
 		 +"')\">查看</button></td><td class='tdmiddle'>";
 		 if(this.remark==null){
-		 html+="<a data-toggle='modal' data-target='#checksign' href='javascript:(0)'  onclick=\"showcheckinfo('"+this.id+"')\">"+this.didtask+"/"+this.signNum+"</a>";
+			 html+="<a data-toggle='modal' data-target='#checksign'  href='#' onclick=\"showcheckinfo('"+this.id+"')\">"+this.didtask+"/"+this.signNum+"</a>";
 		 }
-		 html+="</td><td id='lev'>";
+		 html+="</td><td id='lev'>"
 		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+'</td></tr>';
 	 	 i++;
+	 	 
 	 });
 	 $("#tablebody").html(html);	 
 	 lilist(page, totalPage,size);   

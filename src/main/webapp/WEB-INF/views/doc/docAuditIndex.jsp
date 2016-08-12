@@ -42,7 +42,8 @@
 								&nbsp; &nbsp; &nbsp;级：</label>
 							<div class="col-xs-6">
 								<select class="form-control" id="level1" name="level">
-									<option value="1">特急</option>
+								 <option value="">全部</option>
+								<option value="1">特急</option>
 								<option value="2">加急</option>
 								<option value="3">平急</option>
 								<option value="4">特提</option>
@@ -315,7 +316,7 @@ function setTable(data){
 		 +"','"+this.sendDepartmentInfo
 		 +"')\">查看</button></td>";
 		 if(this.remark==null){
-			 html+="<td class='tdmiddle'><a data-toggle='modal' data-target='#checksign'  href='javascript:(0)' onclick=\"showcheckinfo('"+this.id+"')\">"+this.didtask+"/"+this.signNum+"</a>";
+			 html+="<td class='tdmiddle'><a data-toggle='modal' data-target='#checksign'  href='#' onclick=\"showcheckinfo('"+this.id+"')\">"+this.didtask+"/"+this.signNum+"</a></td>";
 		 }else{
 			 html+="<td></td>";
 		 }

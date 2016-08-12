@@ -31,6 +31,11 @@ public class TaskServiceImpl implements TaskService {
 	public void delete(String id) {
 		taskDao.delete(id);
 	}
+	
+	@Override
+	public void deletemt(String id) {
+		taskDao.deletemt(id);
+	}
 
 	@Override
 	public Task find(String id) {
@@ -100,5 +105,7 @@ public class TaskServiceImpl implements TaskService {
 	public Integer getMeetRelayNum(String did) {
 		return taskDao.getMeetRelayNum(did);
 	}
+
+	
 
 }

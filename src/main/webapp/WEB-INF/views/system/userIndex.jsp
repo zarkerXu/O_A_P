@@ -106,10 +106,10 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label" for="ismain">常用联系人：</label>
                 <label class="radio-inline">
-				  <input type="radio" value="0" id="ismain2" name="ismain" /> 是
+				  <input type="radio" value="0" id="ismain" name="ismain" /> 是
 				</label>
 				<label class="radio-inline">
-				  <input type="radio" value="1" id="ismain" name="ismain" /> 否
+				  <input type="radio" value="1" id="ismain2" name="ismain" /> 否
 				</label>
               </div>
          </div>
@@ -276,9 +276,9 @@ function editUser(id,ismain,oid,obj){
 	$("#phone2").val($(obj).parent().parent().children(".phone2").html());
 	$("#phone3").val($(obj).parent().parent().children(".phone3").html());
 	if(ismain==0){
-		$("#ismain2").click();
-	}else if(ismain==1){
 		$("#ismain").click();
+	}else if(ismain==1){
+		$("#ismain2").click();
 	}
 	$("#modalOpen").click();
 	
@@ -308,8 +308,8 @@ function clean(){
 	$("#modalForm input").each(function(index){
 		$(this).val("");
 	});
-	$("#ismain").val(1);
-	$("#ismain2").val(0);
+	$("#ismain2").val(1);
+	$("#ismain").val(0);
 	$("#oid").val("");
 	$("#ismain").click();
 }

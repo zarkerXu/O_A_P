@@ -28,8 +28,15 @@ public class TaskDaoImpl implements TaskDao {
 	}
 	@Override
 	public void delete(String id) {
+		sqlSessionTemplate.update(
+				"cn.com.oa.mapper.TaskMapper.deleteupdate", id);
+	}
+	
+	@Override
+	public void deletemt(String id) {
 		sqlSessionTemplate.delete(
-				"cn.com.oa.mapper.TaskMapper.delete", id);
+				"cn.com.oa.mapper.TaskMapper.deletemt", id);
+		
 	}
 
 	@Override
@@ -94,6 +101,8 @@ public class TaskDaoImpl implements TaskDao {
 	public Integer getMeetRelayNum(String did) {
 		return sqlSessionTemplate.selectOne("cn.com.oa.mapper.TaskMapper.getMeetRelayNum",did);
 	}
+
+	
 
 
 

@@ -97,7 +97,6 @@
 			<div class="col-md-4">
 				<div class="pull-right">
 					<button type="button" class="btn btn-default" onclick="btnsub()"><strong>查 询</strong></button>
-					<button type="button" class="btn btn-default" onclick="del()"><strong>删 除</strong></button>
 				</div>
 			</div>
 		</div>
@@ -371,13 +370,6 @@ function btnsub(){
 	var url="<c:url value='/meet/meetUser'/>";
 	$("#doselect").attr("action",url );
 	ajaxSubmit($("#doselect"),setTable);
-}
-function del(){
-	var page=$("#pages").val();
-	var ids="";
-	ids+=deleteData();
-	var url="<c:url value='/meet/meetdelete?ids=" + ids + "&page="+page+"'/>";
-	next(url);
 }
 function showinfo(id,tid,signStatus){
 	$.ajax({

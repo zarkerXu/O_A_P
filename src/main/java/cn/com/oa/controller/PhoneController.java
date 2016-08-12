@@ -781,8 +781,8 @@ public class PhoneController extends BaseController {
 			@RequestParam(value = "pass", required = true) Boolean pass,
 			@RequestParam(value = "passRemark", required = true) String passRemark) {
 		String username = simpleDecrypt(value);
-		User user = userService.findByAccount(username);
-		if (user != null) {
+		User user1 = userService.findByAccount(username);
+		if (user1 != null) {
 			MEntry mEntry = new MEntry();
 			mEntry.setId(id);
 			if(pass){
@@ -800,18 +800,19 @@ public class PhoneController extends BaseController {
 				taskService.update(task);
 				mEntryService.update(mEntry);
 				try {
-					
-					User user2 = new User();
-					user2=userService.find(task2.getUid());
-					if (user2 != null) {
+					User user = new User();
+					user = userService.find(task2.getUid());
+					List<String> list = new ArrayList<String>();
+					list.add(user.getAccount());
+					if (list.size() != 0) {
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("action", "meetUserPass");
 						map.put("id", id);
-						WebUtil.sendTexts(user2.getAccount(),
+						WebUtil.sendText(list.toArray(new String[list.size()]),
 								JSON.toJSONString(map));
-						return returnMap(0, "已催收", null);
+						return returnMap(0, "", "已催收");
 					} else {
-						return returnMap(1, "无常用联系人", null);
+						return returnMap(1, "", "无常用联系人");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1332,7 +1333,7 @@ public class PhoneController extends BaseController {
 		}
 		return returnMap(1, null, null);
 	}
-
+	
 	/**
 	 * 转发组织树
 	 * 

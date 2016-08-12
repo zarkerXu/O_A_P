@@ -26,8 +26,8 @@ public class DocDaoImpl implements DocDao {
 	}
 	@Override
 	public void delete(String id) {
-		sqlSessionTemplate.delete(
-				"cn.com.oa.mapper.DocMapper.delete", id);
+		sqlSessionTemplate.update(
+				"cn.com.oa.mapper.DocMapper.deleteupdate", id);
 	}
 
 	@Override
