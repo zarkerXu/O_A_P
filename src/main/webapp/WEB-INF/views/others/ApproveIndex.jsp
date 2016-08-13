@@ -545,17 +545,7 @@ function showmeetinfo(id,oldid){
 		dataType : 'json',
 		data : {"id" : id},
 		success : function(result) {
-			var date=new Date(result.data.meetTime);
-			 var month=date.getMonth()+1;
-			 var minutes=""+date.getMinutes();
-			 var seconds=""+date.getSeconds();
-			 if(minutes.length==1){
-				 minutes="0"+minutes;
-			 }
-			 if(seconds.length==1){
-				 seconds="0"+seconds;
-			 }
-			 var datetime=date.getFullYear()+"/"+month+"/"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;
+			var datetime=times(result.data.meetTime);
 			$("#morganizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#mdocNo").html(result.data.docNo);
 			$("#mdoclevel").html(result.data.level==1?"特急":result.data.level==2?"加急":result.data.level==3?"平急":result.data.level==4?"特提":"");

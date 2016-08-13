@@ -102,6 +102,11 @@ public class TaskDaoImpl implements TaskDao {
 		return sqlSessionTemplate.selectOne("cn.com.oa.mapper.TaskMapper.getMeetRelayNum",did);
 	}
 
+	@Override
+	public Integer getNotApproveNum(Task task) {
+		return sqlSessionTemplate.selectOne("cn.com.oa.mapper.TaskMapper.getNotApproveNum",task);
+	}
+
 	
 
 

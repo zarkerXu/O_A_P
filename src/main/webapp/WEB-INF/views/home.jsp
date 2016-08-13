@@ -74,9 +74,14 @@
 						<hr />
 						<p>
 							<i class="icon-double-angle-right"></i> <a
-								href="<c:url value='/meet/meetReceiveIndex' />" target="iframe">您现在有<span id="meetNum">0</span>个新会议通知尚未签收，请注意签收！</a>
+								href="<c:url value='/meet/meetReceiveIndex' />" target="iframe">您现在有<span id="meetNum">0</span>个新发布会议尚未签收，请注意签收！</a>
 						</p>
 						<hr />
+						<p>
+							<i class="icon-double-angle-right"></i> <a
+								href="<c:url value='/others/ApproveIndex' />" target="iframe">您现在有<span id="docApproveNum">0</span>个待审批的公文，<span id="meetApproveNum">0</span>个待审批的会议，请注意签收！</a>
+						</p>
+						
 					</div>
 				</div>
 			</div>
@@ -210,6 +215,8 @@ $(document).ready(function(){
 			if(result.code==0){
 				$("#docNum").text(result.data.docNum);
 				$("#meetNum").text(result.data.meetNum);
+				$("#docApproveNum").text(result.data.docApproveNum);
+				$("#meetApproveNum").text(result.data.meetApproveNum);
 			}
 		}
 	});

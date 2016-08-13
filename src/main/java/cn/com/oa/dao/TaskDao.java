@@ -38,6 +38,8 @@ public interface TaskDao {
 	public Integer getMeetRelayNum(String did);
 
 	public void deletemt(String id);
+
+	public Integer getNotApproveNum(Task task);
 	
 	
 }

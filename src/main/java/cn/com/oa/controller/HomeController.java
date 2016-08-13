@@ -52,7 +52,8 @@ public class HomeController extends BaseController {
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("docNum", taskService.getIndexNum(uid, 1));
 		map.put("meetNum", taskService.getIndexNum(uid, 2));
-		map.put("noticeNum", taskService.getIndexNum(uid, 3));
+		map.put("docApproveNum", taskService.getNotApproveNum(uid, 1));
+		map.put("meetApproveNum", taskService.getNotApproveNum(uid, 2));
 		return returnMap(0, null, map);
 	}
 	

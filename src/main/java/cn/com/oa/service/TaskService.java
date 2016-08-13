@@ -47,6 +47,8 @@ public interface TaskService {
 	public Integer getMeetRelayNum(String did);
 
 	public void deletemt(String id);
+
+	public Integer getNotApproveNum(String uid, Integer type);
 	
 
 }

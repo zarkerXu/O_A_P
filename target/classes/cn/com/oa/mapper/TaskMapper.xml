@@ -89,6 +89,9 @@
 		sys_user where id=#{uid})))
 		and signStatus=1 and remark is null
 	</select>
+	<select id="getNotApproveNum" parameterType="Task" resultType="Integer">
+	select count(*) from d_task where uid=#{uid} and type =#{type} and remark =1
+	</select>
 	<update id="updatePassStatusByPid" parameterType="Task">
 		update d_task set passStatus=#{passStatus} where did=#{did}
 	</update>

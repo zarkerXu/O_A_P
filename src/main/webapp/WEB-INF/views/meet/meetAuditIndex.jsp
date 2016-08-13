@@ -340,7 +340,7 @@ function setTable(data){
 			 html+="<a data-toggle='modal' data-target='#checksign'  href='#' onclick=\"showcheckinfo('"+this.id+"')\">"+this.didtask+"/"+this.signNum+"</a>";
 		 }
 		 html+="</td><td id='lev'>"
-		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+'</td></tr>';
+		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":this.level==4?"特提":"")+'</td></tr>';
 	 	 i++;
 	 	 
 	 });
@@ -390,17 +390,7 @@ function showinfo(id,tid,signStatus){
 		dataType : 'json',
 		data : {"id" : id},
 		success : function(result) {
-			var date=new Date(result.data.meetTime);
-			 var month=date.getMonth()+1;
-			 var minutes=""+date.getMinutes();
-			 var seconds=""+date.getSeconds();
-			 if(minutes.length==1){
-				 minutes="0"+minutes;
-			 }
-			 if(seconds.length==1){
-				 seconds="0"+seconds;
-			 }
-			 var datetime=date.getFullYear()+"/"+month+"/"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;
+			var datetime=times(result.data.meetTime);
 			$("#department").html("<b>接收单位：</b>&nbsp;"+result.data.departmentInfo);
 			$("#organizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#docNo").html(result.data.docNo);

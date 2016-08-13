@@ -106,6 +106,14 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.getMeetRelayNum(did);
 	}
 
+	@Override
+	public Integer getNotApproveNum(String uid, Integer type) {
+		Task task=new Task();
+		task.setUid(uid);
+		task.setType(type);
+		return taskDao.getNotApproveNum(task);
+	}
+
 	
 
 }

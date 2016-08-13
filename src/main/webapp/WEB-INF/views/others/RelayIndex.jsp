@@ -540,17 +540,7 @@ function showmeetinfo(id,oldid){
 		dataType : 'json',
 		data : {"id" : id},
 		success : function(result) {
-			var date=new Date(result.data.meetTime);
-			 var month=date.getMonth()+1;
-			 var minutes=""+date.getMinutes();
-			 var seconds=""+date.getSeconds();
-			 if(minutes.length==1){
-				 minutes="0"+minutes;
-			 }
-			 if(seconds.length==1){
-				 seconds="0"+seconds;
-			 }
-			 var datetime=date.getFullYear()+"/"+month+"/"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;
+			var datetime=times(result.data.meetTime);
 			$("#mdepartment").html("<b>接收单位：</b>&nbsp;"+result.data.departmentInfo);
 			$("#morganizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#mdocNo").html(result.data.docNo);
