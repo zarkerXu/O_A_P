@@ -21,7 +21,6 @@ import com.alibaba.fastjson.JSONObject;
  * @author         zlh
  */
 public class HttpUtil {
-
     /**
      * Method description post
      *

@@ -55,7 +55,7 @@
     </select>
     <select id="findByMeetid" parameterType="MEntry" resultType="MEntry">
     select m.*,
-(select GROUP_CONCAT(name) from sys_organization where FIND_IN_SET(id,queryOrganizationParentInfo((select oid from  d_task where id=m.pid)))) as organame 
+(select GROUP_CONCAT(name ORDER BY level) from sys_organization where FIND_IN_SET(id,queryOrganizationParentInfo((select oid from  d_task where id=m.pid)))) as organame 
 	
 from m_entry m  LEFT JOIN sys_organization o ON o.id=(select oid from  d_task where id=m.pid) 
    

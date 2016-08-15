@@ -14,7 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 public class PasswordUtil {
 
 	
-	private static SimpleCipherDES des = new SimpleCipherDES(new ClassPathResource("s.key"));;
+	private static SimpleCipherDES des = new SimpleCipherDES(new ClassPathResource("s.key"));
 	
     /**
      * 解密操作
