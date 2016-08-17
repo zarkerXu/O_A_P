@@ -30,6 +30,10 @@ public interface NoticeService {
 	public Notice selectone(String id);
 
 	public List<Notice> findByParameterinhome(String remark);
+
+	public List<Notice> getOwnNoticeList(String value);
+
+
 	
 
 }

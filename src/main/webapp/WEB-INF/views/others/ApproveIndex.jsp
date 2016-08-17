@@ -130,6 +130,7 @@
 				<tr>
 			<th>序号</th>
 			<th>发布时间</th>
+			<th>等级</th>
 			<th>会议名称</th>
 			<th>发文编号</th>
 			<th>发文标题</th>
@@ -138,7 +139,6 @@
 			<th>会议时间</th>
 			<th>内容</th>
 			<th>审批状态</th>
-			<th>等级</th>
 				</tr>
 			
 <tbody id="tablebody" >
@@ -214,6 +214,10 @@
                  </table>
                </div>   
                </div>
+               <hr/>
+               <div class="title_b" id="msendDepart">
+               
+               </div> 
             </div>
      
             <div class="clear"></div>
@@ -364,6 +368,10 @@
                  </table>
                </div>   
                </div>
+			   <hr/>
+               <div class="title_b" id="sendDepart">
+               
+               </div> 
             </div>
      
             <div class="clear"></div>
@@ -435,22 +443,24 @@ function setTable(data){
 		 var datetime=times(this.createTime);
 		 var meettime=times(this.meetTime);
 		 html+="<tr><td>&nbsp;"
-			 +i+"</td><td>"+datetime+"</td><td>"+(this.name==null?'':this.name)+"</td>";
+			 +i+"</td><td>"+datetime+"</td><td id='lev'>"
+			 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+"</td><td>"+(this.name==null?'':this.name)+"</td>";
 			 html+="<td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
-			 +this.sendDepartmentInfo+"</td><td>"+(this.meetCompany==null?'':this.meetCompany)+"</td><td>"+meettime+"</td>";
+			 +this.oldSendDepartment+"</td><td>"+(this.meetCompany==null?'':this.meetCompany)+"</td><td>"+meettime+"</td>";
 			 if(this.type==1){
 			 html+="<td><button type='button' class='btn btn-link' onclick=\"showdoc('"+this.id
 					 +"','"+this.signStatus
 					 +"','"+this.sendDepartmentInfo
+					 +"','"+this.oldSendDepartment
 					 +"')\">查看</button></td>";
 			 }else if(this.type==2){
 				 html+="<td><button type='button' class='btn btn-link'  data-toggle='modal' data-target='#meetModal'onclick=\"showmeetinfo('"+this.id
 				 +"','"+this.oldid
+				 +"','"+this.sendDepartmentInfo
 				 +"')\">查看</button></td>"; 
 			 }
 				 
-				html+="<td>"+(this.isPass==1?"<a href='#' onclick=\"spshow('"+this.tid+"','"+this.signNum+"','"+(this.relayRemark==null?"":this.relayRemark)+"')\">待审批</a>":"<a href='#' onclick=\"showapprove('"+this.tid+"','"+(this.relayRemark==null?"":this.relayRemark)+"')\">已审批</a>")+"</a></td><td id='lev'>"
-		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+'</td></tr>';
+				html+="<td>"+(this.isPass==1?"<a href='#' onclick=\"spshow('"+this.tid+"','"+this.signNum+"','"+(this.relayRemark==null?"":this.relayRemark)+"')\">待审批</a>":"<a href='#' onclick=\"showapprove('"+this.tid+"','"+(this.relayRemark==null?"":this.relayRemark)+"')\">已审批</a>")+"</a></td></tr>";
 	 	 i++;
 	 	 
 	 });
@@ -471,25 +481,25 @@ function geturl(i,size){
 	
 	
 }
-function showdoc(id,signStatus,senddepartment){
+function showdoc(id,signStatus,senddepartment,oldsendDepartment){
 	$.ajax({
 		url : "<c:url value='/doc/getDoc' />",
 		type : 'post',
 		dataType : 'json',
 		data : {"id" : id},
 		success : function(result) {
-			showinfo(result.data.docNo,result.data.level,result.data.docTitle,result.data.docSummary,result.data.oldid,signStatus,senddepartment);
+			showinfo(result.data.docNo,result.data.level,result.data.docTitle,result.data.docSummary,result.data.oldid,signStatus,senddepartment,oldsendDepartment);
 		}
 		});
 }
 
-function showinfo(docNo,level,docTitle,docSummary,id,signStatus,senddepartment){
-    $("#senddepartment").html("<b>发文单位：</b>&nbsp;"+senddepartment);
+function showinfo(docNo,level,docTitle,docSummary,id,signStatus,senddepartment,oldsendDepartment){
+    $("#senddepartment").html("<b>发文单位：</b>&nbsp;"+oldsendDepartment);
 	$("#docNo").html(docNo);
 	$("#doclevel").html(level==1?"特急":level==2?"加急":level==3?"平急":"特提");
 	$("#doctitle").html("<b>文件标题：</b>&nbsp;"+docTitle);
 	$("#docinfo").html("<b>发文摘要：</b>&nbsp;"+docSummary);
-
+	$("#msendDepart").html("<b>转发单位：</b>&nbsp;"+(senddepartment==null?"":senddepartment));
 	$.ajax({
 		url : "<c:url value='/doc/getAttach' />",
 		type : 'post',
@@ -538,7 +548,7 @@ function showapprove(tid,relayRemark){
 		}
 	});
 	}
-function showmeetinfo(id,oldid){
+function showmeetinfo(id,oldid,senddepartment){
 	$.ajax({
 		url : "<c:url value='/meet/getMeet' />",
 		type : 'post',
@@ -556,6 +566,7 @@ function showmeetinfo(id,oldid){
 			$("#maddr").html(result.data.addr);
 			$("#mdoctitle").html("<b>发文标题：</b>&nbsp;"+result.data.docTitle);
 			$("#mdocinfo").html("<b>发文摘要：</b>&nbsp;"+result.data.docSummary);
+			$("#sendDepart").html("<b>转发单位：</b>&nbsp;"+(senddepartment==null?"":senddepartment));
 			$.ajax({
 				url : "<c:url value='/meet/getAttach' />",
 				type : 'post',

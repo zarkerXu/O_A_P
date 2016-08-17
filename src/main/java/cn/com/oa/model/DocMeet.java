@@ -110,6 +110,19 @@ public class DocMeet {
 	 * @return
 	 */
 	private Integer type;
+	
+	/**
+	 * 转发之前的原发送单位
+	 */
+	
+	private String oldSendDepartment;
+	
+	public String getOldSendDepartment() {
+		return oldSendDepartment;
+	}
+	public void setOldSendDepartment(String oldSendDepartment) {
+		this.oldSendDepartment = oldSendDepartment;
+	}
 	public String getId() {
 		return id;
 	}

@@ -48,7 +48,10 @@ public class WebUtil {
 		String json = null;
 		try {
 			entity = new StringEntity(JSON.toJSONString(map));
-			json = HttpUtil.post(Const.HX_URL + "token", entity, true);
+			System.out.println(entity);
+			json = HttpUtil.post(Const.HX_URL + "users", entity, true);
+//			json = HttpUtil.post("https://a1.easemob.com/ym-sx/oa/" + "users", entity, true);
+			System.out.println(json);
 			Map<String, Object> map2 = JSON.parseObject(json, Map.class);
 			if (map2.get("entities") == null) {
 				throw new Exception();
@@ -58,6 +61,26 @@ public class WebUtil {
 			if (json != null && json.equals("401")) {
 				if (getToken()) {
 					register(username, password, nickname);
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean delete(String username){
+		String json=null;
+		try {
+			json = HttpUtil.delete(Const.HX_URL + "users/"+username);
+			Map<String, Object> map2 = JSON.parseObject(json, Map.class);
+			if (map2.get("entities") == null) {
+				throw new Exception();
+			}
+			return true;
+			
+		} catch (Exception e) {
+			if (json != null && json.equals("401")) {
+				if (getToken()) {
+					delete(username);
 				}
 			}
 		}
@@ -100,7 +123,7 @@ public class WebUtil {
 		try {
 			entity = new StringEntity(JSON.toJSONString(map));
 			String json = HttpUtil
-					.post("http://localhost:8090/OA_console/phone/getOrganizationData",
+					.post("http://localhost:8080/OA_console/phone/getOrganizationData",
 							entity, false);
 			System.out.println(json);
 		} catch (Exception e) {

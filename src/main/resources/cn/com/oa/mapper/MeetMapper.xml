@@ -313,7 +313,7 @@
 				%H:%i:%S')
 			</if>
 		</where>
-		order by t.signStatus desc,d.createTime desc
+		order by t.signStatus desc,t.passStatus desc,d.createTime desc
 		limit #{Before},#{size}
 	</select>
 
@@ -496,6 +496,8 @@
 		signStatus=0),true,false) as a from meet m where id=(select did from
 		d_task where id=#{tid} and type=2)
 	</select>
+	
+	
 	<!-- DocMeet used -->
 	<select id="mfindByRelayToPage" parameterType="Page" resultType="DocMeet">
 		SELECT * from(
@@ -510,7 +512,8 @@
 		t.type=1 and t.remark=0)
 		as signUid,
 		d.uuid as name,d.uuid as
-		meetTime,d.uuid as meetCompany,1 as type
+		meetTime,d.uuid as meetCompany,1 as type,
+		(select o.name from sys_organization o LEFT JOIN sys_user u on o.id=u.oid where u.id=(select cuid from doc where id=d.oldid))as oldSendDepartment 
 		from doc d
 
 		UNION ALL
@@ -526,7 +529,8 @@
 		as signUid,
 		m.name,m.meetTime,(select name from
 		sys_organization o where o.id=m.meetCompany) as
-		meetCompany,2 as type
+		meetCompany,2 as type,
+		(select o.name from sys_organization o LEFT JOIN sys_user u on o.id=u.oid where u.id=(select cuid from meet where id=m.oldid))as oldSendDepartment 
 		from meet m
 		) Tmp
 		<where>
@@ -659,7 +663,8 @@
 		(select count(*) from d_task t where t.did=d.id and t.type=1 and t.remark=0)
 		as signUid,
 		d.uuid as name,d.uuid as meetTime,d.uuid as meetCompany,1 as type,
-		t.id as tid,t.remark as isPass,d.relayRemark
+		t.id as tid,t.remark as isPass,d.relayRemark,
+		(select o.name from sys_organization o LEFT JOIN sys_user u on o.id=u.oid where u.id=(select cuid from doc where id=d.oldid))as oldSendDepartment 
 		from doc d left join d_task t on t.did=d.id and t.uid=#{pageObject.cuid}
 
 		UNION ALL
@@ -673,7 +678,8 @@
 		as signUid,
 		m.name,m.meetTime,(select name from sys_organization o where o.id=m.meetCompany) as
 		meetCompany,2 as type,
-		t.id as tid,t.remark as isPass,m.relayRemark
+		t.id as tid,t.remark as isPass,m.relayRemark,
+		(select o.name from sys_organization o LEFT JOIN sys_user u on o.id=u.oid where u.id=(select cuid from meet where id=m.oldid))as oldSendDepartment 
 		from meet m left join d_task t on t.did=m.id and t.uid=#{pageObject.cuid}
 		) Tmp
 		<where>
@@ -714,7 +720,7 @@
 				%H:%i:%S')
 			</if>
 		</where>
-		order by signStatus desc,createTime desc
+		order by isPass desc,createTime desc
 		limit #{Before},#{size}
 	</select>
 	

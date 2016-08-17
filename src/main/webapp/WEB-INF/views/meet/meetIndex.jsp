@@ -106,7 +106,7 @@
 		<table class="table table-bordered table-hover change">
 			
 				<tr>
-					<th><input type="checkbox" onClick="allSelect()">序号</th>
+					<th>序号</th>
 					<th>发布时间</th>
 					<th>会议名称</th>
 					<th>发文编号</th>
@@ -330,9 +330,9 @@ function setTable(data){
 	 $.each(data.pageObject,function() {
 		 var datetime=times(this.createTime);
 		 var meettime=times(this.meetTime);
-		 html+="<tr><td><input type='checkbox'  value='"+this.id+"'>&nbsp;"
-		 +i+"</td><td>"+datetime+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td><p class='chaochu'>"
-		 +this.meetCompanyName+"</p></td><td>"+meettime+"</td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
+		 html+="<tr><td>"
+		 +i+"</td><td>"+datetime+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
+		 +this.meetCompanyName+"</td><td>"+meettime+"</td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
 		 +"','"+this.signStatus
 		 +"')\">查看</button></td><td class='tdmiddle'><a data-toggle='modal' data-target='#checksign' href='javascript:(0)' style='color:blue' onclick=\"showcheckinfo('"+this.id+"')\">"+this.didtask+"/"+this.signNum+"</a></td><td id='lev'>"
 		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":this.level==4?"特提":"")+'</td></tr>';
@@ -425,7 +425,7 @@ function urge(did,oid,obj){
 		type : 'post',
 		dataType : 'json',
 		data : {
-			"did" : did,
+			"mid" : did,
 			"oid" : oid
 			},
 		success : function(result) {

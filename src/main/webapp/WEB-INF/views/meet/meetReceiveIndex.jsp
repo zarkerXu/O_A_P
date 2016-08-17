@@ -141,6 +141,7 @@
 				<tr>
 					<th>序号</th>
 					<th>发布时间</th>
+					<th>等级</th>
 					<th>会议名称</th>
 					<th>发文编号</th>
 					<th>发文标题</th>
@@ -150,8 +151,7 @@
 					<th>内容</th>
 					<th>签收状态</th>
 					<th>审批状态</th>
-					<th>操作</th>
-					<th>等级</th>
+					<th>操作</th>	
 				</tr>
 			
 <tbody id="tablebody" >
@@ -430,13 +430,13 @@
               	 会议转发
             </h4>
          </div>
+         
+         <div class="modal-body">
          <form id="zfForm" action="<c:url value='/others/Relay' />"
 			method="post">
-         <div class="modal-body">
          <div class="form-group">
-			<label for="name">备注:</label>
-			 
-           <textarea class="form-control textareatop "   id="relayRemark" name="relayRemark" ></textarea>
+			<label for="name">转发意见:</label> 
+           <textarea class="form-control textareatop "  id="relayRemark" name="relayRemark"  style="width:100%;"></textarea>
             </div>
           	   <div class="form-group">
 					<div class="managerinfoblock">
@@ -464,9 +464,9 @@
 			<div class="clear"></div>
            <input name="type" type="hidden" value="2">
            <input id="zfid" name="id" type="hidden">
-          
+           </form>
          </div>
-        </form>
+       
          <div class="modal-footer">
             <button type="button" class="btn btn-default" 
                data-dismiss="modal">关闭
@@ -576,13 +576,14 @@ function setTable(data){
 		 var datetime=times(this.createTime);
 		 var meettime=times(this.meetTime);
 		 html+="<tr><td>&nbsp;"
-		 +i+"</td><td>"+datetime+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
+		 +i+"</td><td>"+datetime+"</td><td id='lev'>"
+		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":this.level==4?"特提":"")+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
 		 +this.sendDepartmentInfo+"</td><td>"
-		 +this.meetCompanyName+"<td>"+meettime+"</td></td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
+		 +this.meetCompanyName+"<td>"+meettime+"</td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
 				 +"','"+this.tid
 				 +"','"+this.signStatus
-				 +"')\">查看</button></td><td class='tdmiddle'>"+(this.signStatus==0?"已签收":"未签收")+"</td><td class='tdmiddle'>"+(this.passStatus==0?"已审批":this.passStatus==1?"审批未通过":this.passStatus==2?"正在审批":this.passStatus==3?"未审批":"")+
-				 "</td><td>";
+				 +"')\">查看</button></td><td class='tdmiddle'>"+(this.signStatus==0?"已签收":"未签收")+"</td><td class='tdmiddle'>"+(this.passStatus==0?"已审批":this.passStatus==1?"审批未通过":this.passStatus==2?"待审批":this.passStatus==3?"未报名":"")+
+				 "</td><td><center>";
 		 if(this.personnel==null){
 		 if(this.passStatus!=0){
 			 html+='<button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal2" onclick="nownum(\''+this.tid+'\',false)">报名</button>';
@@ -590,9 +591,8 @@ function setTable(data){
 			 html+='<button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal2" onclick="nownum(\''+this.tid+'\',true)">查看报名</button>';
 		 }
 		 }
-	     html+="<a href='#' onclick='relay(\""+this.id+"\")'>转发</a>     ";
-					 html+= "</td><td id='lev'>"
-		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":this.level==4?"特提":"")+'</td></tr>';
+	     html+="<br/></center><center><a href='#' onclick='relay(\""+this.id+"\")'>转发</a></center>";
+					 html+= "</td></tr>";
 	 	 i++;
 	 });
 	 $("#tablebody").html(html);	 

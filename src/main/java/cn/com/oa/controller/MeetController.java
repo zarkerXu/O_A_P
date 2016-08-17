@@ -99,7 +99,7 @@ public class MeetController extends BaseController {
 	public Map<String, Object> meetCompany(Meet meet, Page page) {
 		Subject currentRoot = SecurityUtils.getSubject();
 		String uid = (String) currentRoot.getPrincipal();
-		meet.setOrderBy("meetTime desc");
+		meet.setOrderBy("passStatus desc,meetTime desc");
 		meet.setMeetCompany(userService.find(uid).getOid());
 		page = meetService.findByParameterToPage(meet, page);
 		return returnMap(0, "", page);

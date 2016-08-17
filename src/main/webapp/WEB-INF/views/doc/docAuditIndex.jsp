@@ -118,12 +118,12 @@
 				<tr>
 					<th><input type="checkbox" onClick="allSelect()">序号</th>
 					<th>发布时间</th>
+					<th>等级</th>
 					<th>发文编号</th>
 					<th>文件标题</th>
 					<th>发文单位</th>
 					<th>内容</th>
 					<th>已签收/应签收</th>
-					<th>等级</th>
 				</tr>
 			
 <tbody id="tablebody" >
@@ -309,8 +309,8 @@ function setTable(data){
 		 }
 		 var datetime=date.getFullYear()+"-"+month+"-"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;  
 		 html+="<tr><td><input type='checkbox'  value='"+this.id+"'>&nbsp;"
-		 +i+"</td><td>"+datetime+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td><p class='chaochu'>"
-		 +this.sendDepartmentInfo+"</p></td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showdoc('"+this.id
+		 +i+"</td><td>"+datetime+"</td><td id='lev'>"+(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
+		 +this.sendDepartmentInfo+"</td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showdoc('"+this.id
 		 +"','"+this.tid
 		 +"','"+this.signStatus
 		 +"','"+this.sendDepartmentInfo
@@ -320,8 +320,7 @@ function setTable(data){
 		 }else{
 			 html+="<td></td>";
 		 }
-		 html+="<td id='lev'>"
-		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+'</td></tr>';
+		 html+="</tr>";
 	 	 i++;
 	 		});
 	 $("#tablebody").html(html);	 

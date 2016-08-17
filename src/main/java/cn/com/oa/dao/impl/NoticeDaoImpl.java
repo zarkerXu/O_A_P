@@ -79,5 +79,10 @@ public class NoticeDaoImpl implements NoticeDao {
 		return sqlSessionTemplate.selectList("cn.com.oa.mapper.NoticeMapper.findByParameterinhome",remark);
 	}
 
+	@Override
+	public List<Notice> getOwnNoticeList(String value) {
+		return sqlSessionTemplate.selectList("cn.com.oa.mapper.NoticeMapper.getOwnNoticeList",value);
+	}
+
 
 }

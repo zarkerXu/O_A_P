@@ -268,7 +268,8 @@ public class PhoneController extends BaseController {
 		return returnMap(1, "erro", null);
 
 	}
-
+	
+	
 	@RequestMapping(value = "/getOrganizationData", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> getOrganizationData(
@@ -1038,7 +1039,12 @@ public class PhoneController extends BaseController {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
-			List<Notice> notices = noticeService.getNoticeList(user.getId());
+			List<Notice> notices =new ArrayList<Notice>();
+			if(user.getLevel()==2){
+				notices=noticeService.getOwnNoticeList(user.getRemark());
+			}else{
+				notices=noticeService.getOwnNoticeList(user.getOid());
+			}
 			return returnMap(0, "", notices);
 		}
 		return returnMap(1, null, null);
@@ -1430,6 +1436,25 @@ public class PhoneController extends BaseController {
 		}
 		return null;
 	}
+	
+	
+	@RequestMapping(value="/gettest",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> gettest(){
+		boolean yes=WebUtil.register("zarkers", "19961996", "zarker");
+		System.out.println(yes);
+		return returnMap(1, "", yes);
+	}
+	
+	@RequestMapping(value="/deleteuser",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> deleteuser(){
+		boolean yes=WebUtil.delete("zarkers");
+		System.out.println(yes);
+		return returnMap(1, "", yes);
+	}
+	
+	
 
 	/**
 	 * 获取时间

@@ -84,4 +84,9 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeDao.findByParameterinhome(remark);
 	}
 
+	@Override
+	public List<Notice> getOwnNoticeList(String value) {
+		return noticeDao.getOwnNoticeList(value);
+	}
+
 }

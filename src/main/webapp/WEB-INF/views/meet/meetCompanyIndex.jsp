@@ -134,6 +134,7 @@
 				<tr>
 					<th>序号</th>
 					<th>发布时间</th>
+					<th>等级</th>
 					<th>会议名称</th>
 					<th>发文编号</th>
 					<th>发文标题</th>
@@ -143,7 +144,6 @@
 					<th>内容</th>
 					<th>审批状态</th>
 					<th>操作</th>
-					<th>等级</th>
 				</tr>
 			
 <tbody id="tablebody" >
@@ -453,20 +453,20 @@ function setTable(data){
 		 var datetime=times(this.createTime);
 		 var meettime=times(this.meetTime);
 		 html+="<tr><td>&nbsp;"
-		 +i+"</td><td>"+datetime+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
+		 +i+"</td><td>"+datetime+"</td><td id='lev'>"
+		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":this.level==4?"特提":"")+"</td><td>"+this.name+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td>"
 		 +this.sendDepartmentInfo+"</td><td>"
 		 +this.meetCompanyName+"</td><td>"+meettime+"</td><td><button type='button' class='btn btn-link' data-toggle='modal' data-target='#myModal' onclick=\"showinfo('"+this.id
 				 +"','"+this.tid
 				 +"','"+this.signStatus
-				 +"')\">查看</button></td><td class='tdmiddle'>"+(this.passStatus==0?"已审批":this.passStatus==1?"审批未通过":this.passStatus==2?"正在审批":this.passStatus==3?"未审批":"")+
+				 +"')\">查看</button></td><td class='tdmiddle'>"+(this.passStatus==0?"已审批":this.passStatus==1?"审批未通过":this.passStatus==2?"待审批":this.passStatus==3?"未审批":"")+
 				 "</td><td>";
 		 if(this.passStatus==2||this.passStatus==3){
 			 html+='<button type="button" class="btn btn-link" data-toggle="modal" data-target="#checksign" onclick="getPass(\''+this.id+'\',false)">审批报名</button>';
 		 }else{
 			 html+='<button type="button" class="btn btn-link" data-toggle="modal" data-target="#checksign" onclick="getPass(\''+this.id+'\',true)">查看报名</button>';
 		 }
-	     html+="</td><td id='lev'>"
-		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":this.level==4?"特提":"")+'</td></tr>';
+	     html+="</td></tr>";
 	 	 i++;
 	 });
 	 $("#tablebody").html(html);	 

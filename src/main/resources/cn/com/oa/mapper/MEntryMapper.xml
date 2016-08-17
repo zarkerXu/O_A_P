@@ -78,7 +78,7 @@ LEFT JOIN sys_organization_type p ON p.id=o.typeid
     and type=#{type}
     </if>
     </where> 
-    order by m.type, m.passStatus desc,queryOrganizationParentInfo((select oid from  d_task where id=m.pid)),p.sort,o.sort
+    order by m.type,queryOrganizationParentInfo((select oid from  d_task where id=m.pid)), m.passStatus desc,p.sort,o.sort
     </select>
     <update id="update"  parameterType="MEntry">
     update m_entry

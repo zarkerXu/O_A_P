@@ -116,13 +116,13 @@
 				<tr>
 					<th>序号</th>
 					<th>发布时间</th>
+					<th>等级</th>
 					<th>发文编号</th>
 					<th>文件标题</th>
 					<th>发文单位</th>
 					<th>内容</th>
 					<th>签收状态</th>
 					<th>操作</th>
-					<th>等级</th>
 				</tr>
 			
 <tbody id="tablebody" >
@@ -220,7 +220,7 @@
          <form id="zfForm" action="<c:url value='/others/Relay' />"
 			method="post">
 			<div class="form-group">
-			<label for="name">备注:</label>
+			<label for="name">转发意见:</label>
 			 
            <textarea class="form-control textareatop "   id="relayRemark" name="relayRemark" ></textarea>
             </div>
@@ -328,15 +328,15 @@ function setTable(data){
 		 }
 		 var datetime=date.getFullYear()+"/"+month+"/"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;  
 		 html+="<tr><td>&nbsp;"
-		 +i+"</td><td>"+datetime+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td><p class='chaochu'>"
+		 +i+"</td><td>"+datetime+"</td><td id='lev'>"+(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+"</td><td>"+this.docNo+"</td><td>"+this.docTitle+"</td><td><p class='chaochu'>"
 		 +this.sendDepartmentInfo+"</p></td><td><button type='button' class='btn btn-link' onclick=\"showdoc('"+this.id
 				 +"','"+this.tid
 				 +"','"+this.signStatus
 				 +"','"+this.sendDepartmentInfo
 				 +"')\">查看</button></td><td class='tdmiddle'>"+(this.signStatus==0?"已签收":"未签收")+"</td><td><a href='#' onclick='relay(\""+this.id+"\")'>转发</a>  ";
 		
-				 html+= "</td><td id='lev'>"
-		 +(this.level==1?"特急":this.level==2?"加急":this.level==3?"平急":"特提")+'</td></tr>';
+				 html+= "</td></tr>"
+				
 	 	 i++;
 	 });
 	 $("#tablebody").html(html);	 
