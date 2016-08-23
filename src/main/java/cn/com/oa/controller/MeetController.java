@@ -463,6 +463,7 @@ public class MeetController extends BaseController {
 	public Map<String, Object> getMEntryByPid(String pid) {
 		MEntry mEntry = new MEntry();
 		mEntry.setPid(pid);
+		mEntry.setOrderBy("passStatus desc");
 		return returnMap(0, null, mEntryService.findByParameter(mEntry));
 	}
 

@@ -140,7 +140,7 @@
 		t.signStatus=0)) as didtask,(select o.name from sys_organization o
 		where o.id=d.meetCompany) as meetCompanyName from meet d
 		<where>
-			isuse=0
+			isuse=0 and d.oldid is null
 			<if test="pageObject.id!=null and pageObject.id!=''">
 				and id=#{pageObject.id}
 			</if>
@@ -201,7 +201,7 @@
 		resultType="Integer">
 		select count(*) from meet d
 		<where>
-			isuse=0
+			isuse=0 and d.oldid is null
 			<if test="pageObject.id!=null and pageObject.id!=''">
 				and id=#{pageObject.id}
 			</if>
@@ -503,7 +503,7 @@
 		SELECT * from(
 		SELECT
 		d.id,d.department,d.personnel,d.level,d.docNo,d.docTitle,d.docSummary,d.signNum,d.signStatus,d.isuse
-		,d.remark ,d.cuid ,d.createTime,d.oldid,
+		,d.remark ,d.cuid ,d.createTime,d.oldid,d.relayRemark,
 		(select o.name from
 		sys_organization o join sys_user u on u.oid=o.id where
 		u.id=d.cuid) as
@@ -520,7 +520,7 @@
 
 		SELECT
 		m.id,m.department,m.personnel,m.level,m.docNo,m.docTitle,m.docSummary,m.signNum,m.signStatus,m.isuse,m.remark,m.cuid
-		,m.createTime,m.oldid,
+		,m.createTime,m.oldid,m.relayRemark,
 		(select o.name from sys_organization o join
 		sys_user u on u.oid=o.id where
 		u.id=m.cuid) as sendDepartmentInfo,

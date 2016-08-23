@@ -296,6 +296,9 @@
             <div class="title" id="mdepartment">  
                
                </div>
+            <div class="title" id="msenddepartment">  
+               
+               </div>
                <div class="title" id="morganizeDepartmentInfo">  
                
                </div>
@@ -553,6 +556,7 @@ function showmeetinfo(id,oldid,senddepartment,oldsendDepartmentInfo){
 		data : {"id" : id},
 		success : function(result) {
 			var datetime=times(result.data.meetTime);
+			$("#msenddepartment").html("<b>发文单位：</b>&nbsp;"+oldsendDepartmentInfo);
 			$("#mdepartment").html("<b>接收单位：</b>&nbsp;"+result.data.departmentInfo);
 			$("#morganizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#mdocNo").html(result.data.docNo);

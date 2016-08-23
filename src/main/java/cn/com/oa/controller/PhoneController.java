@@ -786,9 +786,11 @@ public class PhoneController extends BaseController {
 		if (user1 != null) {
 			MEntry mEntry = new MEntry();
 			mEntry.setId(id);
+			boolean flag=false;
 			if(pass){
 				mEntry.setPassStatus(0);
 				mEntryService.update(mEntry);
+				flag=true;
 			}else{
 				mEntry.setPassStatus(1);
 				mEntry.setPassRemark(passRemark);
@@ -819,6 +821,12 @@ public class PhoneController extends BaseController {
 					e.printStackTrace();
 				}
 			}
+			if(flag){
+				return returnMap(0, "", "成功通过");
+			}else{
+				return returnMap(1, "", "未通过");
+			}
+			
 		}
 		return returnMap(1, null, null);
 	}
@@ -1052,7 +1060,6 @@ public class PhoneController extends BaseController {
 
 	/**
 	 * 获取公告
-	 * 
 	 * @param value
 	 * @param id
 	 * @return

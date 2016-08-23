@@ -152,6 +152,9 @@
             <div class="title" id="department">  
                
                </div>
+               <div class="title" id="senddepartment">  
+               
+               </div>
                <div class="title" id="organizeDepartmentInfo">  
                
                </div>
@@ -392,6 +395,11 @@ function showinfo(id,tid,signStatus){
 		success : function(result) {
 			var datetime=times(result.data.meetTime);
 			$("#department").html("<b>接收单位：</b>&nbsp;"+result.data.departmentInfo);
+			if(result.data.oldid==null){
+				$("#senddepartment").html("<b>发文单位：</b>&nbsp;"+result.data.sendDepartmentInfo);	
+			}else{
+				$("#senddepartment").html("<b>转发单位：</b>&nbsp;"+result.data.sendDepartmentInfo);
+			}
 			$("#organizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#docNo").html(result.data.docNo);
 			$("#doclevel").html(result.data.level==1?"特急":result.data.level==2?"加急":result.data.level==3?"平急":result.data.level==4?"特提":"");

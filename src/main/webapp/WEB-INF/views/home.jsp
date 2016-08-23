@@ -79,7 +79,7 @@
 						<hr />
 						<p>
 							<i class="icon-double-angle-right"></i> <a
-								href="<c:url value='/others/ApproveIndex' />" target="iframe">您现在有<span id="docApproveNum">0</span>个待审批的公文，<span id="meetApproveNum">0</span>个待审批的会议，请注意签收！</a>
+								href="<c:url value='/others/ApproveIndex' />" target="iframe">您现在有<span id="docApproveNum">0</span>个待审批的公文，<span id="meetApproveNum">0</span>个待审批的会议，请注意办理！</a>
 						</p>
 						
 					</div>
@@ -274,7 +274,7 @@ function showNotice(id){
 			 }
 			 var datetime=date.getFullYear()+"/"+month+"/"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;
 			$("#show_createtime").html(datetime);
-			$("#show_department").html("<b>发送单位：</b>&nbsp;"+result.data.departmentName);
+			$("#show_department").html("<b>发布单位：</b>&nbsp;"+result.data.departmentName);
 			$("#show_title").html("<b>标题：</b>&nbsp;"+result.data.title);
 			$("#show_summary").html("<b>内容：</b>&nbsp;"+result.data.summary);
 			$.ajax({

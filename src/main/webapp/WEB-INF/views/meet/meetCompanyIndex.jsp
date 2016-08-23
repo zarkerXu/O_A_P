@@ -175,7 +175,11 @@
          </div>
          <div class="modal-body">
             <div class="docmain">
+            
             <div class="title" id="department">  
+               
+               </div>
+               <div class="title" id="senddepartment">  
                
                </div>
                <div class="title" id="organizeDepartmentInfo">  
@@ -513,6 +517,7 @@ function showinfo(id,tid,signStatus){
 		data : {"id" : id},
 		success : function(result) {
 			var datetime=times(result.data.meetTime);
+			$("#senddepartment").html("<b>发文单位：</b>"+result.data.sendDepartmentInfo);
 			$("#department").html("<b>接收单位：</b>&nbsp;"+result.data.departmentInfo);
 			$("#organizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#docNo").html(result.data.docNo);

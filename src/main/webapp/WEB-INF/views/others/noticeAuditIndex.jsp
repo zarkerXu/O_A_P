@@ -262,7 +262,7 @@ function showNotice(id){
 			 }
 			 var datetime=date.getFullYear()+"/"+month+"/"+date.getDate()+" "+date.getHours()+":"+minutes+":"+seconds;
 			$("#show_createtime").html(datetime);
-			$("#show_department").html("<b>发送单位：</b>&nbsp;"+result.data.departmentName);
+			$("#show_department").html("<b>发布单位：</b>&nbsp;"+result.data.departmentName);
 			$("#show_title").html("<b>标题：</b>&nbsp;"+result.data.title);
 			$("#show_summary").html("<b>内容：</b>&nbsp;"+result.data.summary);
 			$.ajax({

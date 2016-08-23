@@ -619,6 +619,7 @@ function showinfo(id,tid,signStatus){
 		data : {"id" : id},
 		success : function(result) {
 			var datetime=times(result.data.meetTime);
+			$("#department").html("<b>发文单位：</b>"+result.data.sendDepartmentInfo);
 			$("#organizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#docNo").html(result.data.docNo);
 			$("#doclevel").html(result.data.level==1?"特急":result.data.level==2?"加急":result.data.level==3?"平急":result.data.level==4?"特提":"");

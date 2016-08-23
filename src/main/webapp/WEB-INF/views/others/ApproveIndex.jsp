@@ -252,7 +252,7 @@
          <div class="modal-body">
         
          <div class="form-group">
-			<label for="name">备注:</label>
+			<label for="name">转发意见:</label>
 			<div class="remark" id="myremark">
 		      
 			</div>
@@ -457,6 +457,7 @@ function setTable(data){
 				 html+="<td><button type='button' class='btn btn-link'  data-toggle='modal' data-target='#meetModal'onclick=\"showmeetinfo('"+this.id
 				 +"','"+this.oldid
 				 +"','"+this.sendDepartmentInfo
+				 +"','"+this.oldSendDepartment
 				 +"')\">查看</button></td>"; 
 			 }
 				 
@@ -548,7 +549,7 @@ function showapprove(tid,relayRemark){
 		}
 	});
 	}
-function showmeetinfo(id,oldid,senddepartment){
+function showmeetinfo(id,oldid,senddepartment,oldSendDepartment){
 	$.ajax({
 		url : "<c:url value='/meet/getMeet' />",
 		type : 'post',
@@ -556,6 +557,7 @@ function showmeetinfo(id,oldid,senddepartment){
 		data : {"id" : id},
 		success : function(result) {
 			var datetime=times(result.data.meetTime);
+			$("#mdepartment").html("<b>发文单位：</b>&nbsp;"+oldSendDepartment);
 			$("#morganizeDepartmentInfo").html("<b>承办单位：</b>&nbsp;"+result.data.meetCompanyName);
 			$("#mdocNo").html(result.data.docNo);
 			$("#mdoclevel").html(result.data.level==1?"特急":result.data.level==2?"加急":result.data.level==3?"平急":result.data.level==4?"特提":"");

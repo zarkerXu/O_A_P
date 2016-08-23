@@ -371,12 +371,17 @@ function showdoc(id,tid,signStatus,senddepartment){
 		dataType : 'json',
 		data : {"id" : id},
 		success : function(result) {
-			showinfo(result.data.docNo,result.data.level,result.data.docTitle,result.data.docSummary,result.data.id,signStatus,senddepartment);
+			showinfo(result.data.docNo,result.data.level,result.data.docTitle,result.data.docSummary,result.data.id,signStatus,senddepartment,result.data.oldid,result.data.departmentInfo);
 		}
 		});
 }
-function showinfo(docNo,level,docTitle,docSummary,id,signStatus,senddepartment){
-    $("#senddepartment").html("<b>发文单位：</b>&nbsp;"+senddepartment);
+function showinfo(docNo,level,docTitle,docSummary,id,signStatus,senddepartment,oldid,departmentInfo){
+		$("#department").html("<b>接收单位：</b>&nbsp;"+departmentInfo);
+	if(oldid==null){
+		$("#senddepartment").html("<b>发文单位：</b>&nbsp;"+senddepartment);
+	}else{
+		$("#senddepartment").html("<b>转发单位：</b>&nbsp;"+senddepartment);
+	}
 	$("#docNo").html(docNo);
 	$("#doclevel").html(level==1?"特急":level==2?"加急":level==3?"平急":"特提");
 	$("#doctitle").html("<b>文件标题：</b>&nbsp;"+docTitle);
