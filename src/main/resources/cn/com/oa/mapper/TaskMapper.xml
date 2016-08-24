@@ -92,6 +92,10 @@
 	<select id="getNotApproveNum" parameterType="Task" resultType="Integer">
 	select count(*) from d_task where uid=#{uid} and type =#{type} and remark =1
 	</select>
+	<select id="getindexNoPassMeet" parameterType="String" resultType="String">
+	select did from d_task where  remark is null and passRemark is null and passStatus=1
+	and oid=#{value} and type=2
+	</select>
 	<update id="updatePassStatusByPid" parameterType="Task">
 		update d_task set passStatus=#{passStatus} where did=#{did}
 	</update>

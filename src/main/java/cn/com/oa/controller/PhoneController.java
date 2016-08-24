@@ -1048,11 +1048,11 @@ public class PhoneController extends BaseController {
 		User user = userService.findByAccount(username);
 		if (user != null) {
 			List<Notice> notices =new ArrayList<Notice>();
-			if(user.getLevel()==2){
-				notices=noticeService.getOwnNoticeList(user.getRemark());
-			}else{
+//			if(user.getLevel()==2){
+//				notices=noticeService.getOwnNoticeList(user.getRemark());
+//			}else{
 				notices=noticeService.getOwnNoticeList(user.getOid());
-			}
+//			}
 			return returnMap(0, "", notices);
 		}
 		return returnMap(1, null, null);
@@ -1072,7 +1072,7 @@ public class PhoneController extends BaseController {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
-			Notice notice = noticeService.select(id);
+			Notice notice = noticeService.selectone(id);
 			return returnMap(0, "", notice);
 		}
 		return returnMap(1, null, null);
@@ -1443,6 +1443,109 @@ public class PhoneController extends BaseController {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * app登陆后获取通告中的内容
+	 * @return
+	 */
+	@RequestMapping(value="/indexFirstGet",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> indexFirstGet(
+			@RequestParam(value = "value", required = true) String value){
+		String username = simpleDecrypt(value);
+		User user = userService.findByAccount(username);
+		if (user != null) {
+			try {
+				List<DocMeet> docmeets=new ArrayList<DocMeet>();
+				docmeets=meetService.getindexFirstGet(user.getOid());
+				return returnMap(0, "获取成功", docmeets);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return returnMap(1, "获取失败", null);
+			}
+
+		}
+		return returnMap(1, null, null);
+		
+	}
+	
+	
+	/**
+	 * app登陆后获取通告中的内容test
+	 * @return
+	 */
+	@RequestMapping(value="/monitest",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> monitest(
+			@RequestParam(value = "value", required = true) String value){
+		
+		User user = userService.findByAccount(value);
+		if (user != null) {
+			try {
+				List<DocMeet> docmeets=new ArrayList<DocMeet>();
+				docmeets=meetService.getindexFirstGet(user.getOid());
+				return returnMap(0, "获取成功", docmeets);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				return returnMap(1, "获取失败", null);
+			}
+
+		}
+		return returnMap(1, null, null);
+		
+	}
+	
+	/**
+	 * 公告签收
+	 * 
+	 * @param value
+	 * @param tid
+	 * @return
+	 */
+	@RequestMapping(value = "/noticeSign", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> noticeSign(
+			@RequestParam(value = "value", required = true) String value,
+			@RequestParam(value = "tid", required = true) String tid) {
+		String username = simpleDecrypt(value);
+		User user = userService.findByAccount(username);
+		if (user != null) {
+			if (taskService.find(tid).getSignStatus() == 1) {
+				Task task = new Task();
+				task.setId(tid);
+				task.setSignStatus(0);
+				task.setUid(user.getId());
+				taskService.update(task);
+				return returnMap(0, "签收成功", null);
+			} else {
+				return returnMap(1, "已签收", null);
+			}
+		}
+		return returnMap(1, "erro", null);
+	}
+	
+	/**
+	 * 首页获取报名未通过的信息
+	 * @return
+	 */
+	@RequestMapping(value = "/indexNoPassMeet", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> indexNoPassMeet(
+			@RequestParam(value = "value", required = true) String value) {
+		String username = simpleDecrypt(value);
+		User user = userService.findByAccount(username);
+		if (user != null) {
+			List<String> info=new ArrayList<String>();
+			info=taskService.getindexNoPassMeet(user.getOid());
+			return returnMap(0,"获取成功",info);
+		}
+		return returnMap(1, "erro", null);
+	}
+	
+	
 	
 	
 	@RequestMapping(value="/gettest",method=RequestMethod.POST)

@@ -67,7 +67,7 @@ public class Meet {
 	 */
 	private Integer signStatus;
 	/**
-	 * 审核状态(0:审批通过,1:审批未通过,2:正在审批,3:未审批)
+	 * 审核状态(0:审批通过,1:审批未通过,2:待审批,3:未审批)
 	 */
 	private Integer passStatus;
 	/**

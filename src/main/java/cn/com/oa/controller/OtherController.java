@@ -95,12 +95,12 @@ public class OtherController extends BaseController {
 		String id = (String) currentUser.getPrincipal();
 		User user = userService.find(id);
 		Page pageObj = new Page();
-		try {
-			currentUser.checkPermission(Const.PERMISSION_COMMONLYADMIN);
-			page.setIds(user.getRemark());
-			pageObj = noticeService.findByParameterToPage(notice, page);
-			return returnMap(0, "", pageObj);
-		} catch (AuthorizationException e1) {
+//		try {
+//			currentUser.checkPermission(Const.PERMISSION_COMMONLYADMIN);
+//			page.setIds(user.getRemark());
+//			pageObj = noticeService.findByParameterToPage(notice, page);
+//			return returnMap(0, "", pageObj);
+//		} catch (AuthorizationException e1) {
 			try {
 				page.setIds(user.getOid());
 				pageObj = noticeService.findByParameterToPage(notice, page);
@@ -110,7 +110,7 @@ public class OtherController extends BaseController {
 				e.printStackTrace();
 			}
 
-		}
+//		}
 		return returnMap(0, "", null);
 	}
 
@@ -137,11 +137,11 @@ public class OtherController extends BaseController {
 		String id = (String) currentUser.getPrincipal();
 		User user = userService.find(id);
 		List<Notice> notices = new ArrayList<Notice>();
-		try {
-			currentUser.checkPermission(Const.PERMISSION_COMMONLYADMIN);
-			notices = noticeService.findByParameterinhome(user.getRemark());
-			return returnMap(0, "", notices);
-		} catch (AuthorizationException e1) {
+//		try {
+//			currentUser.checkPermission(Const.PERMISSION_COMMONLYADMIN);
+//			notices = noticeService.findByParameterinhome(user.getRemark());
+//			return returnMap(0, "", notices);
+//		} catch (AuthorizationException e1) {
 			try {
 				notices = noticeService.findByParameterinhome(user.getOid());
 				return returnMap(0, "", notices);
@@ -150,7 +150,7 @@ public class OtherController extends BaseController {
 				e.printStackTrace();
 			}
 
-		}
+//		}
 		return returnMap(0, "", null);
 
 	}

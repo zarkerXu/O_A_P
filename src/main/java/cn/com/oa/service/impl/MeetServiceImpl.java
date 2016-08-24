@@ -185,4 +185,9 @@ public class MeetServiceImpl implements MeetService {
 		return page;
 	}
 
+	@Override
+	public List<DocMeet> getindexFirstGet(String oid) {
+		return meetDao.getindexFirstGet(oid);
+	}
+
 }

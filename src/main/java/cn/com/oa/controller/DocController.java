@@ -236,7 +236,7 @@ public class DocController extends BaseController {
 		}
 		id = id.substring(0, id.length() - 1);
 		docService.delete(id);
-		taskService.delete(id);
+		taskService.deletemt(id);
 		return docSelect(doc, page, request);
 	}
 /**

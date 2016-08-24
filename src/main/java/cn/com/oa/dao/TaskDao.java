@@ -40,6 +40,8 @@ public interface TaskDao {
 	public void deletemt(String id);
 
 	public Integer getNotApproveNum(Task task);
+
+	public List<String> getindexNoPassMeet(String oid);
 	
 	
 }

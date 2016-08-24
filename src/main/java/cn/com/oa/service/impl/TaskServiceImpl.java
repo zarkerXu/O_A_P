@@ -114,6 +114,11 @@ public class TaskServiceImpl implements TaskService {
 		return taskDao.getNotApproveNum(task);
 	}
 
+	@Override
+	public List<String> getindexNoPassMeet(String oid) {
+		return taskDao.getindexNoPassMeet(oid);
+	}
+
 	
 
 }

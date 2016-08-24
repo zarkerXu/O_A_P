@@ -21,7 +21,7 @@ public class Task {
 	 */
 	private String did;
 	/**
-	 * 类型(预留字段)
+	 * 类型(1:公文  2:会议 3:公告)
 	 */
 	private Integer type;
 	/**

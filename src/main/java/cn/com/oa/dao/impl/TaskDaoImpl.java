@@ -107,6 +107,11 @@ public class TaskDaoImpl implements TaskDao {
 		return sqlSessionTemplate.selectOne("cn.com.oa.mapper.TaskMapper.getNotApproveNum",task);
 	}
 
+	@Override
+	public List<String> getindexNoPassMeet(String oid) {
+		return sqlSessionTemplate.selectList("cn.com.oa.mapper.TaskMapper.getindexNoPassMeet",oid);
+	}
+
 	
 
 

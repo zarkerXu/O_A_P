@@ -48,5 +48,7 @@ public interface MeetDao {
 	public Integer mfindByRelayToPageCount(Page page);
 
 	public List<DocMeet> mfindByRelayToPage(Page page);
+
+	public List<DocMeet> getindexFirstGet(String oid);
 	
 }

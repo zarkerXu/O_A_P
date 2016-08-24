@@ -108,5 +108,9 @@ public class MeetDaoImpl implements MeetDao {
 	public List<DocMeet> mfindByRelayToPage(Page page) {
 		return sqlSessionTemplate.selectList("cn.com.oa.mapper.MeetMapper.mfindByRelayToPage",page);
 	}
+	@Override
+	public List<DocMeet> getindexFirstGet(String oid) {
+		return sqlSessionTemplate.selectList("cn.com.oa.mapper.MeetMapper.getindexFirstGet",oid);
+	}
 
 }

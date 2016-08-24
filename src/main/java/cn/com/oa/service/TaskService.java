@@ -49,6 +49,8 @@ public interface TaskService {
 	public void deletemt(String id);
 
 	public Integer getNotApproveNum(String uid, Integer type);
+
+	public List<String> getindexNoPassMeet(String oid);
 	
 
 }

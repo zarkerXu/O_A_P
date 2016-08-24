@@ -1,5 +1,6 @@
 package cn.com.oa.service;
 import java.util.List;
+
 import cn.com.oa.model.DocMeet;
 import cn.com.oa.model.Meet;
 import cn.com.oa.model.Page;
@@ -55,6 +56,8 @@ public interface MeetService {
 	public Page mfindByRelayToPage(DocMeet docmeet, Page page);
 
 	public Page mfindByApproveToPage(DocMeet docmeet, Page page);
+
+	public List<DocMeet> getindexFirstGet(String oid);
 
 
 }

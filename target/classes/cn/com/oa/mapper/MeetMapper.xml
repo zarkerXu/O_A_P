@@ -791,6 +791,42 @@
 			</if>
 		</where>
 	</select>
+	
+	
+	<select id="getindexFirstGet" parameterType="String" resultType="DocMeet">
+	SELECT id ,department, docNo ,docTitle, docSummary, (select o.name from sys_organization o join sys_user u on u.oid=o.id where u.id=d.cuid) as sendDepartmentInfo, 
+createTime ,level ,null as name,null as meetTime,null as meetCompany,null as addr,1 as type,
+(SELECT t.id from d_task t WHERE t.did=d.id and type=1 and t.oid=#{value}) as tid,(SELECT t.signStatus from d_task t WHERE t.did=d.id and type=1 and t.oid=#{value}) as signStatus
+ from doc d where remark is null and isuse=0 and 
+FIND_IN_SET(d.id,
+(select GROUP_CONCAT(did) from d_task where signStatus=1 and remark is null and passRemark is null 
+	and oid=#{value} and type=1))
+
+UNION ALL
+
+SELECT id, department, docNo, docTitle, docSummary, (select o.name from sys_organization o join sys_user u on u.oid=o.id where u.id=m.cuid) as sendDepartmentInfo,
+ createTime , level, name ,meetTime ,(select name from
+		sys_organization o where o.id=m.meetCompany) as
+		meetCompany,addr,2 as type ,
+(SELECT t.id from d_task t WHERE t.did=m.id and type=2 and t.oid=#{value}) as tid,(SELECT t.signStatus from d_task t WHERE t.did=m.id and type=2 and t.oid=#{value}) as signStatus
+from meet m where remark is null and isuse=0 and 
+FIND_IN_SET(m.id,
+(select GROUP_CONCAT(did) from d_task where signStatus=1 and remark is null and passRemark is null 
+	and oid=#{value} and type=2))
+
+UNION ALL
+
+SELECT id ,null as department ,null as docNo,title as docTitle,summary as docSummary,(select o.name from sys_organization o join sys_user u on u.oid=o.id where u.id=n.cuid) as sendDepartmentInfo,
+ createTime,null as level,
+null as name ,null as meetTime,null as meetCompany,null as addr ,3 as type ,
+(SELECT t.id from d_task t WHERE t.did=n.id and type=3 and t.oid=#{value}) as tid,(SELECT t.signStatus from d_task t WHERE t.did=n.id and type=3 and t.oid=#{value}) as signStatus
+from notice n  
+where  isuse=0 and 
+FIND_IN_SET(n.id,
+(select GROUP_CONCAT(did) from d_task where signStatus=1 and remark is null and passRemark is null 
+	and oid=#{value} and type=3))
+	
+	</select>
 
 
 
