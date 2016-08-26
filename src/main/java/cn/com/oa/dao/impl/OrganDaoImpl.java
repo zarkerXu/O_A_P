@@ -15,7 +15,7 @@ import cn.com.oa.model.Organization;
 public class OrganDaoImpl implements OrganDao {
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;
-
+	
 	@Override
 	public void insert(Organ organ) {
 		sqlSessionTemplate.insert("cn.com.oa.mapper.OrganMapper.insert", organ);

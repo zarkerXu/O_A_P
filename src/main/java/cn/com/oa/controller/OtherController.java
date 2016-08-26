@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +30,6 @@ import cn.com.oa.service.NoticeService;
 import cn.com.oa.service.OrganizationService;
 import cn.com.oa.service.TaskService;
 import cn.com.oa.service.UserService;
-import cn.com.oa.util.Const;
 import cn.com.oa.util.UuidUtil;
 
 @Controller
