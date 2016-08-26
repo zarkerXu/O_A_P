@@ -392,7 +392,7 @@ public class MeetController extends BaseController {
 				if (list.size() != 0) {
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("action", "meetUserPass");
-					map.put("id", id);
+					map.put("id", task2.getDid());
 					WebUtil.sendText(list.toArray(new String[list.size()]),
 							JSON.toJSONString(map));
 					return returnMap(0, "", "已催收");

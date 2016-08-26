@@ -268,16 +268,13 @@ public class PhoneController extends BaseController {
 		return returnMap(1, "erro", null);
 
 	}
-	
-	
+
 	@RequestMapping(value = "/getOrganizationData", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> getOrganizationData(
 			@RequestParam(value = "value", required = true) String value,
 			HttpServletRequest request) {
-		System.out.println("value=" + value);
-		System.out.println(new Date().getTime());
-		String username = simpleDecrypt(value);
+		 String username = simpleDecrypt(value);
 		List<Organization> list = new ArrayList<Organization>();
 		User user = userService.findByAccount(username);
 		if (user != null) {
@@ -294,7 +291,15 @@ public class PhoneController extends BaseController {
 										.getOid()));
 					}
 				}
-				return returnMap(0, "", list);
+				List<Organization> list2 = new ArrayList<Organization>();
+				for (Organization temp : list) {
+					DFS(temp, list2);
+				}
+
+				for(Organization temp : list2){
+					temp.setOrganizationList(null);
+				}
+				return returnMap(0, "", list2);
 			} else {
 				List<Organization> organizations = organizationService
 						.findParentById(user.getOid());
@@ -303,11 +308,30 @@ public class PhoneController extends BaseController {
 						.setOrganizationList(getOrganizationList(organizations
 								.get(0).getId()));
 				list.add(organization);
-				return returnMap(0, "", list);
+
+				List<Organization> list2 = new ArrayList<Organization>();
+				for (Organization temp : list) {
+					DFS(temp, list2);
+				}
+				for(Organization temp : list2){
+					temp.setOrganizationList(null);
+				}
+				return returnMap(0, "", list2);
 			}
 		}
 
 		return returnMap(1, "", null);
+	}
+	//递归处理
+	private void DFS(Organization temp, List<Organization> mDepartments) {
+		mDepartments.add(temp);
+		if (temp.getOrganizationList() != null
+				&& temp.getOrganizationList().size() >= 0) {
+			for (Organization account : temp.getOrganizationList()) {
+				account.setName(temp.getName() + "/" + account.getName());
+				DFS(account, mDepartments);
+			}
+		}
 	}
 
 	@RequestMapping(value = "/getCheckInfo", method = RequestMethod.POST)
@@ -715,7 +739,7 @@ public class PhoneController extends BaseController {
 	 * @param value
 	 * @param id
 	 * @return
-	 */
+	 */ 
 	@RequestMapping(value = "/updateTaskPassStatus", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> updateTaskPassStatus(
@@ -726,13 +750,13 @@ public class PhoneController extends BaseController {
 		if (user != null) {
 			try {
 				if (taskService.find(tid).getPassStatus() == 0) {
-					return returnMap(1, null, null);
+					return returnMap(1, "报名已经截止", null);
 				}
 				Task task = new Task();
 				task.setId(tid);
 				task.setPassStatus(2);
 				taskService.update(task);
-				return returnMap(0, null, null);
+				return returnMap(0, "成功", null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -786,18 +810,18 @@ public class PhoneController extends BaseController {
 		if (user1 != null) {
 			MEntry mEntry = new MEntry();
 			mEntry.setId(id);
-			boolean flag=false;
-			if(pass){
+			boolean flag = false;
+			if (pass) {
 				mEntry.setPassStatus(0);
 				mEntryService.update(mEntry);
-				flag=true;
-			}else{
+				flag = true;
+			} else {
 				mEntry.setPassStatus(1);
 				mEntry.setPassRemark(passRemark);
-				MEntry mEntry2=mEntryService.find(id);
-				Task task=new Task();
-				Task task2=new Task();
-				task2=taskService.find(mEntry2.getPid());
+				MEntry mEntry2 = mEntryService.find(id);
+				Task task = new Task();
+				Task task2 = new Task();
+				task2 = taskService.find(mEntry2.getPid());
 				task.setId(mEntry2.getPid());
 				task.setPassStatus(1);
 				taskService.update(task);
@@ -810,7 +834,7 @@ public class PhoneController extends BaseController {
 					if (list.size() != 0) {
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("action", "meetUserPass");
-						map.put("id", id);
+						map.put("id", task2.getDid());
 						WebUtil.sendText(list.toArray(new String[list.size()]),
 								JSON.toJSONString(map));
 						return returnMap(0, "", "已催收");
@@ -821,12 +845,12 @@ public class PhoneController extends BaseController {
 					e.printStackTrace();
 				}
 			}
-			if(flag){
+			if (flag) {
 				return returnMap(0, "", "成功通过");
-			}else{
+			} else {
 				return returnMap(1, "", "未通过");
 			}
-			
+
 		}
 		return returnMap(1, null, null);
 	}
@@ -1047,12 +1071,12 @@ public class PhoneController extends BaseController {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
-			List<Notice> notices =new ArrayList<Notice>();
-//			if(user.getLevel()==2){
-//				notices=noticeService.getOwnNoticeList(user.getRemark());
-//			}else{
-				notices=noticeService.getOwnNoticeList(user.getOid());
-//			}
+			List<Notice> notices = new ArrayList<Notice>();
+			// if(user.getLevel()==2){
+			// notices=noticeService.getOwnNoticeList(user.getRemark());
+			// }else{
+			notices = noticeService.getOwnNoticeList(user.getOid());
+			// }
 			return returnMap(0, "", notices);
 		}
 		return returnMap(1, null, null);
@@ -1060,6 +1084,7 @@ public class PhoneController extends BaseController {
 
 	/**
 	 * 获取公告
+	 * 
 	 * @param value
 	 * @param id
 	 * @return
@@ -1116,7 +1141,7 @@ public class PhoneController extends BaseController {
 			@RequestParam(value = "id", required = true) String id,
 			@RequestParam(value = "organid", required = true) String organid,
 			@RequestParam(value = "type", required = true) String type,
-			@RequestParam(value="relayRemark",required=true) String relayRemark) {
+			@RequestParam(value = "relayRemark", required = true) String relayRemark) {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
@@ -1148,7 +1173,7 @@ public class PhoneController extends BaseController {
 				if (type.equals("1")) {
 					Doc docone = new Doc();
 					docone = docService.find(id);
-					System.out.println("123"+id);
+					System.out.println("123" + id);
 					Doc doc = new Doc();
 					doc.setId(did);
 					doc.setPersonnel(uids.substring(0, uids.length() - 1));
@@ -1193,24 +1218,23 @@ public class PhoneController extends BaseController {
 
 	/**
 	 * 获取我的转发公文和会议
-	 */	
+	 */
 	@RequestMapping(value = "/findRelay", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> findRelay(
 			@RequestParam(value = "value", required = true) String value,
-			@RequestParam(value="keywords",required=true) String keywords,
-			DocMeet docmeet,
-			Page page) {
+			@RequestParam(value = "keywords", required = true) String keywords,
+			DocMeet docmeet, Page page) {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
 			docmeet.setCuid(user.getId());
-			page=meetService.mfindByRelayToPage(docmeet, page);
+			page = meetService.mfindByRelayToPage(docmeet, page);
 			return returnMap(0, "成功", page);
 		}
 		return returnMap(1, null, null);
 	}
-	
+
 	/**
 	 * 选择我的公文审批和会议审批
 	 * 
@@ -1218,26 +1242,22 @@ public class PhoneController extends BaseController {
 	 * @param page
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/findApproveRelay", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> mfindApproveRelay(
 			@RequestParam(value = "value", required = true) String value,
-			@RequestParam(value="keywords",required=true) String keywords,
-			DocMeet docmeet,
-			Page page) {
+			@RequestParam(value = "keywords", required = true) String keywords,
+			DocMeet docmeet, Page page) {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
 			docmeet.setCuid(user.getId());
-			page=meetService.mfindByApproveToPage(docmeet, page);
+			page = meetService.mfindByApproveToPage(docmeet, page);
 			return returnMap(0, "成功", page);
 		}
 		return returnMap(1, null, null);
 	}
-
-
-
 
 	/**
 	 * 公文和会议的审批
@@ -1264,8 +1284,8 @@ public class PhoneController extends BaseController {
 				if (task.getType() == 1) {
 					// 公文
 					int i = taskService.getDocRelayNum(did);
-					if (i == Integer.parseInt(signnum)) {	
-						System.out.println("11111"+did);
+					if (i == Integer.parseInt(signnum)) {
+						System.out.println("11111" + did);
 						Doc doc = new Doc();
 						doc.setSignStatus(0);
 						doc.setId(did);
@@ -1275,7 +1295,7 @@ public class PhoneController extends BaseController {
 					// 会议
 					int i = taskService.getMeetRelayNum(did);
 					if (i == Integer.parseInt(signnum)) {
-						System.out.println("22222"+did);
+						System.out.println("22222" + did);
 						Meet meet = new Meet();
 						meet.setSignStatus(0);
 						meet.setId(did);
@@ -1319,10 +1339,10 @@ public class PhoneController extends BaseController {
 	 * 获取审批的详情
 	 * 
 	 * @param did
-	 * @param type 
+	 * @param type
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/findapproved", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> findapproved(
@@ -1346,7 +1366,7 @@ public class PhoneController extends BaseController {
 		}
 		return returnMap(1, null, null);
 	}
-	
+
 	/**
 	 * 转发组织树
 	 * 
@@ -1368,15 +1388,37 @@ public class PhoneController extends BaseController {
 				tree.setChildren(getOrganizationTree(organizations.get(0)
 						.getId()));
 				treeList.add(tree);
-				return returnMap(0, "获取成功", treeList);
+				
+				List<Tree> list2 = new ArrayList<Tree>();
+				for (Tree temp : treeList) {
+					DFStwo(temp, list2);
+				}
+
+				for(Tree temp : list2){
+					temp.setChildren(null);
+				}
+			
+				
+				return returnMap(0, "获取成功", list2);
 
 			} catch (Exception e) {
 				return returnMap(1, "获取失败", null);
 			}
+			
 
 		}
 		return returnMap(1, null, null);
 	}
+	
+	private void DFStwo(Tree temp,List<Tree> mList) {
+        mList.add(temp);
+        if (temp.getChildren() != null && temp.getChildren().size() >= 0) {
+            for (Tree relay : temp.getChildren()) {
+                relay.setName(temp.getName() + "/" + relay.getName());
+                DFStwo(relay,mList);
+            }
+        }
+    }	
 
 	public List<Tree> getOrganizationTree(String id) {
 		List<Organization> list = null;
@@ -1393,8 +1435,10 @@ public class PhoneController extends BaseController {
 		}
 		return list2;
 	}
+
 	/**
 	 * 手机端导出Excel文件
+	 * 
 	 * @param mid
 	 * @return
 	 */
@@ -1405,60 +1449,62 @@ public class PhoneController extends BaseController {
 		String username = simpleDecrypt(value);
 		User userone = userService.findByAccount(username);
 		if (userone != null) {
-		ModelAndView view=new ModelAndView();
-		Meet meet=meetService.find(mid);
-		MEntry mEntry=new MEntry();
-		mEntry.setId(mid);
-		mEntry.setOrderBy("type,passStatus");
-		List<MEntry> MElist=mEntryService.findByMeetid(mEntry);
-		List<List<List<String>>> list=new ArrayList<List<List<String>>>();
-		List<List<String>> list1=new ArrayList<List<String>>();
-		List<List<String>> list2=new ArrayList<List<String>>();
-		List<List<String>> list3=new ArrayList<List<String>>();
-		Integer i=1;
-		for(MEntry entry:MElist){
-			List<String> stringlist=new ArrayList<String>();
-			stringlist.add(String.valueOf(i));
-			stringlist.add(entry.getOrganame());
-			stringlist.add(entry.getName());
-			stringlist.add((entry.getSex()==0?"男":"女"));
-			stringlist.add(entry.getPost());
-			stringlist.add(entry.getPhone());
-			stringlist.add(entry.getRemark());
-			stringlist.add((entry.getPassStatus()==0?"已审批":entry.getPassStatus()==1?"审批未通过":entry.getPassStatus()==3?"未审批":""));
-			if(entry.getType()==0){
-				list1.add(stringlist);
-			}else if(entry.getType()==1){
-				list2.add(stringlist);
-			}else if(entry.getType()==2){
-				list3.add(stringlist);
+			ModelAndView view = new ModelAndView();
+			Meet meet = meetService.find(mid);
+			MEntry mEntry = new MEntry();
+			mEntry.setId(mid);
+			mEntry.setOrderBy("type,passStatus");
+			List<MEntry> MElist = mEntryService.findByMeetid(mEntry);
+			List<List<List<String>>> list = new ArrayList<List<List<String>>>();
+			List<List<String>> list1 = new ArrayList<List<String>>();
+			List<List<String>> list2 = new ArrayList<List<String>>();
+			List<List<String>> list3 = new ArrayList<List<String>>();
+			Integer i = 1;
+			for (MEntry entry : MElist) {
+				List<String> stringlist = new ArrayList<String>();
+				stringlist.add(String.valueOf(i));
+				stringlist.add(entry.getOrganame());
+				stringlist.add(entry.getName());
+				stringlist.add((entry.getSex() == 0 ? "男" : "女"));
+				stringlist.add(entry.getPost());
+				stringlist.add(entry.getPhone());
+				stringlist.add(entry.getRemark());
+				stringlist.add((entry.getPassStatus() == 0 ? "已审批" : entry
+						.getPassStatus() == 1 ? "审批未通过"
+						: entry.getPassStatus() == 3 ? "未审批" : ""));
+				if (entry.getType() == 0) {
+					list1.add(stringlist);
+				} else if (entry.getType() == 1) {
+					list2.add(stringlist);
+				} else if (entry.getType() == 2) {
+					list3.add(stringlist);
+				}
+				i++;
 			}
-			i++;
-		}
-		list.add(list1);
-		list.add(list2);
-		list.add(list3);
-		view.setView(new ExcelPassView("会议报名表",meet.getName(),list));
-		return view;
+			list.add(list1);
+			list.add(list2);
+			list.add(list3);
+			view.setView(new ExcelPassView("会议报名表", meet.getName(), list));
+			return view;
 		}
 		return null;
 	}
-	
-	
+
 	/**
 	 * app登陆后获取通告中的内容
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value="/indexFirstGet",method=RequestMethod.POST)
+	@RequestMapping(value = "/indexFirstGet", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> indexFirstGet(
-			@RequestParam(value = "value", required = true) String value){
+	public Map<String, Object> indexFirstGet(
+			@RequestParam(value = "value", required = true) String value) {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
 			try {
-				List<DocMeet> docmeets=new ArrayList<DocMeet>();
-				docmeets=meetService.getindexFirstGet(user.getOid());
+				List<DocMeet> docmeets = new ArrayList<DocMeet>();
+				docmeets = meetService.getindexFirstGet(user.getOid());
 				return returnMap(0, "获取成功", docmeets);
 
 			} catch (Exception e) {
@@ -1468,24 +1514,24 @@ public class PhoneController extends BaseController {
 
 		}
 		return returnMap(1, null, null);
-		
+
 	}
-	
-	
+
 	/**
 	 * app登陆后获取通告中的内容test
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value="/monitest",method=RequestMethod.POST)
+	@RequestMapping(value = "/monitest", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> monitest(
-			@RequestParam(value = "value", required = true) String value){
-		
+	public Map<String, Object> monitest(
+			@RequestParam(value = "value", required = true) String value) {
+
 		User user = userService.findByAccount(value);
 		if (user != null) {
 			try {
-				List<DocMeet> docmeets=new ArrayList<DocMeet>();
-				docmeets=meetService.getindexFirstGet(user.getOid());
+				List<DocMeet> docmeets = new ArrayList<DocMeet>();
+				docmeets = meetService.getindexFirstGet(user.getOid());
 				return returnMap(0, "获取成功", docmeets);
 
 			} catch (Exception e) {
@@ -1495,9 +1541,9 @@ public class PhoneController extends BaseController {
 
 		}
 		return returnMap(1, null, null);
-		
+
 	}
-	
+
 	/**
 	 * 公告签收
 	 * 
@@ -1526,9 +1572,10 @@ public class PhoneController extends BaseController {
 		}
 		return returnMap(1, "erro", null);
 	}
-	
+
 	/**
 	 * 首页获取报名未通过的信息
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/indexNoPassMeet", method = RequestMethod.POST)
@@ -1538,33 +1585,28 @@ public class PhoneController extends BaseController {
 		String username = simpleDecrypt(value);
 		User user = userService.findByAccount(username);
 		if (user != null) {
-			List<String> info=new ArrayList<String>();
-			info=taskService.getindexNoPassMeet(user.getOid());
-			return returnMap(0,"获取成功",info);
+			List<String> info = new ArrayList<String>();
+			info = taskService.getindexNoPassMeet(user.getOid());
+			return returnMap(0, "获取成功", info);
 		}
 		return returnMap(1, "erro", null);
 	}
-	
-	
-	
-	
-	@RequestMapping(value="/gettest",method=RequestMethod.POST)
+
+	@RequestMapping(value = "/gettest", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> gettest(){
-		boolean yes=WebUtil.register("zarkers", "19961996", "zarker");
+	public Map<String, Object> gettest() {
+		boolean yes = WebUtil.register("zarkers", "19961996", "zarker");
 		System.out.println(yes);
 		return returnMap(1, "", yes);
 	}
-	
-	@RequestMapping(value="/deleteuser",method=RequestMethod.POST)
+
+	@RequestMapping(value = "/deleteuser", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> deleteuser(){
-		boolean yes=WebUtil.delete("zarkers");
+	public Map<String, Object> deleteuser() {
+		boolean yes = WebUtil.delete("zarkers");
 		System.out.println(yes);
 		return returnMap(1, "", yes);
 	}
-	
-	
 
 	/**
 	 * 获取时间
@@ -1604,6 +1646,5 @@ public class PhoneController extends BaseController {
 		}
 		return null;
 	}
-
 
 }

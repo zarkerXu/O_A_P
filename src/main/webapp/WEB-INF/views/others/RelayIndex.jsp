@@ -215,12 +215,13 @@
                </div>   
                </div>
                <hr/>
+                <div class="title_b" id="msendDepart">
+               
+               </div> 
                <div class="title_b" id="mzfremark">
                
                </div> 
-               <div class="title_b" id="msendDepart">
-               
-               </div> 
+              
             </div>
      
             <div class="clear"></div>
@@ -376,12 +377,13 @@
                </div>   
                </div>
                <hr/>
+                <div class="title_b" id="sendDepart">
+               
+               </div> 
                <div class="title_b" id="zfremark">
                
                </div> 
-               <div class="title_b" id="sendDepart">
-               
-               </div> 
+              
             </div>
      
             <div class="clear"></div>
